@@ -13,9 +13,9 @@ import { Switch } from "@arizeai/components";
 import { Alert, Flex, View } from "@phoenix/components";
 import {
   ExperimentCompareView,
-  ExperimentCompareViewSelect,
+  ExperimentCompareViewToggle,
   isExperimentCompareView,
-} from "@phoenix/components/experiment/ExperimentCompareViewSelect";
+} from "@phoenix/components/experiment/ExperimentCompareViewToggle";
 import { useFeatureFlag } from "@phoenix/contexts/FeatureFlagsContext";
 import { experimentCompareLoader } from "@phoenix/pages/experiment/experimentCompareLoader";
 import { assertUnreachable } from "@phoenix/typeUtils";
@@ -68,43 +68,45 @@ export function ExperimentComparePage() {
         flex="none"
       >
         <Flex direction="row" justifyContent="space-between" alignItems="end">
-          <Flex direction="row" gap="size-100" justifyContent="start">
-            <ExperimentMultiSelector
-              dataRef={loaderData}
-              selectedBaseExperimentId={baseExperimentId}
-              selectedCompareExperimentIds={compareExperimentIds}
-              onChange={(newBaseExperimentId, newCompareExperimentIds) => {
-                startTransition(() => {
-                  if (newBaseExperimentId == null) {
-                    navigate(`/datasets/${datasetId}/compare`);
-                  } else {
-                    const queryParams = `?${[
-                      newBaseExperimentId,
-                      ...newCompareExperimentIds,
-                    ]
-                      .map((id) => `experimentId=${id}`)
-                      .join("&")}`;
-                    navigate(`/datasets/${datasetId}/compare${queryParams}`);
-                  }
-                });
-              }}
-            />
+          <ExperimentMultiSelector
+            dataRef={loaderData}
+            selectedBaseExperimentId={baseExperimentId}
+            selectedCompareExperimentIds={compareExperimentIds}
+            onChange={(newBaseExperimentId, newCompareExperimentIds) => {
+              startTransition(() => {
+                if (newBaseExperimentId == null) {
+                  navigate(`/datasets/${datasetId}/compare`);
+                } else {
+                  const queryParams = `?${[
+                    newBaseExperimentId,
+                    ...newCompareExperimentIds,
+                  ]
+                    .map((id) => `experimentId=${id}`)
+                    .join("&")}`;
+                  navigate(`/datasets/${datasetId}/compare${queryParams}`);
+                }
+              });
+            }}
+          />
+          <Flex direction="row" gap="size-275" alignItems="end">
+            <View paddingBottom="size-75">
+              <Switch
+                onChange={(isSelected) => {
+                  setDisplayFullText(isSelected);
+                }}
+                defaultSelected={false}
+                labelPlacement="start"
+              >
+                Full Text
+              </Switch>
+            </View>
             {showModeSelect && (
-              <ExperimentCompareViewSelect
+              <ExperimentCompareViewToggle
                 view={view}
                 onViewChange={onViewChange}
               />
             )}
           </Flex>
-          <Switch
-            onChange={(isSelected) => {
-              setDisplayFullText(isSelected);
-            }}
-            defaultSelected={false}
-            labelPlacement="start"
-          >
-            Full Text
-          </Switch>
         </Flex>
       </View>
       {baseExperimentId == null ? (

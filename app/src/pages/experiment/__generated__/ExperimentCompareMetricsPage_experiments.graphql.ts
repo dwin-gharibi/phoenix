@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b99ba60c1cb4011a2c241c10d689bbd>>
+ * @generated SignedSource<<1caf8253cc05f15ea46a25132454c040>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -62,6 +62,7 @@ export type ExperimentCompareMetricsPage_experiments$data = {
             };
           };
           readonly id: string;
+          readonly sequenceNumber: number;
         };
       }>;
     };
@@ -196,6 +197,13 @@ return {
                           "args": null,
                           "kind": "ScalarField",
                           "name": "id",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "sequenceNumber",
                           "storageKey": null
                         },
                         {
@@ -373,6 +381,6 @@ return {
 };
 })();
 
-(node as any).hash = "e11be301f1cc94b71e2491e092528ddc";
+(node as any).hash = "4e8b8f1013bd582cab8dec97a31b315a";
 
 export default node;

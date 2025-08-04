@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { graphql, useFragment } from "react-relay";
 import invariant from "tiny-invariant";
 import { css } from "@emotion/react";
@@ -17,6 +17,7 @@ import {
   SelectChevronUpDownIcon,
   Text,
 } from "@phoenix/components";
+import { useCategoryChartColors } from "@phoenix/components/chart";
 import { SequenceNumberToken } from "@phoenix/components/experiment/SequenceNumberToken";
 import { fieldBaseCSS } from "@phoenix/components/field/styles";
 import { selectCSS } from "@phoenix/components/select/styles";
@@ -38,6 +39,16 @@ export function ExperimentMultiSelector(props: {
     onChange,
     dataRef,
   } = props;
+  const colors = useCategoryChartColors();
+  const getExperimentColor = useCallback(
+    (sequenceNumber: number) => {
+      const colorValues = Object.values(colors);
+      const numColors = colorValues.length;
+      const index = (sequenceNumber - 1) % numColors;
+      return colorValues[index];
+    },
+    [colors]
+  );
 
   const data = useFragment(
     graphql`
@@ -137,6 +148,9 @@ export function ExperimentMultiSelector(props: {
                           <Flex direction="row" gap="size-100">
                             <SequenceNumberToken
                               sequenceNumber={experiment.sequenceNumber}
+                              color={getExperimentColor(
+                                experiment.sequenceNumber
+                              )}
                             />
                             <Text>{experiment.name}</Text>
                           </Flex>
@@ -196,6 +210,9 @@ export function ExperimentMultiSelector(props: {
                               <Flex direction="row" gap="size-100">
                                 <SequenceNumberToken
                                   sequenceNumber={experiment.sequenceNumber}
+                                  color={getExperimentColor(
+                                    experiment.sequenceNumber
+                                  )}
                                 />
                                 <Text>{experiment.name}</Text>
                               </Flex>

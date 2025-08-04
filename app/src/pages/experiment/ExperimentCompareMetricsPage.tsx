@@ -1,9 +1,10 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { graphql, useFragment } from "react-relay";
 import { useLoaderData, useSearchParams } from "react-router";
 import { css } from "@emotion/react";
 
 import { Flex, Heading, Icon, Icons, Text, View } from "@phoenix/components";
+import { useCategoryChartColors } from "@phoenix/components/chart";
 import {
   costFormatter,
   latencyMsFormatter,
@@ -39,6 +40,7 @@ type CompareExperimentData = {
   value: MetricValue;
   numImprovements: number;
   numRegressions: number;
+  color: string;
 };
 
 type MetricCardProps = {
@@ -80,6 +82,7 @@ function MetricCard({
             baseExperimentValue={baseExperimentValue}
             numImprovements={compareExperiment.numImprovements}
             numRegressions={compareExperiment.numRegressions}
+            color={compareExperiment.color}
           />
         ))}
       </Flex>
@@ -95,6 +98,16 @@ export function ExperimentCompareMetricsPage() {
     throw new Error("Empty state not yet implemented");
   }
   const loaderData = useLoaderData<typeof experimentCompareLoader>();
+  const colors = useCategoryChartColors();
+  const getExperimentColor = useCallback(
+    (sequenceNumber: number) => {
+      const colorValues = Object.values(colors);
+      const numColors = colorValues.length;
+      const index = (sequenceNumber - 1) % numColors;
+      return colorValues[index];
+    },
+    [colors]
+  );
   const data = useFragment<ExperimentCompareMetricsPage_experiments$key>(
     graphql`
       fragment ExperimentCompareMetricsPage_experiments on Query
@@ -109,6 +122,7 @@ export function ExperimentCompareMetricsPage() {
               edges {
                 experiment: node {
                   id
+                  sequenceNumber
                   averageRunLatencyMs
                   costSummary {
                     total {
@@ -243,6 +257,7 @@ export function ExperimentCompareMetricsPage() {
           compareExperimentIdToCounts[experiment.id]?.latency.numIncreases ?? 0,
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.latency.numDecreases ?? 0,
+        color: getExperimentColor(experiment.sequenceNumber),
       });
       promptTokensMetric.compareExperiments.push({
         experimentId: experiment.id,
@@ -253,6 +268,7 @@ export function ExperimentCompareMetricsPage() {
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.promptTokenCount
             .numDecreases ?? 0,
+        color: getExperimentColor(experiment.sequenceNumber),
       });
       completionTokensMetric.compareExperiments.push({
         experimentId: experiment.id,
@@ -263,6 +279,7 @@ export function ExperimentCompareMetricsPage() {
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.completionTokenCount
             .numDecreases ?? 0,
+        color: getExperimentColor(experiment.sequenceNumber),
       });
       totalTokensMetric.compareExperiments.push({
         experimentId: experiment.id,
@@ -273,6 +290,7 @@ export function ExperimentCompareMetricsPage() {
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.totalTokenCount
             .numDecreases ?? 0,
+        color: getExperimentColor(experiment.sequenceNumber),
       });
       totalCostMetric.compareExperiments.push({
         experimentId: experiment.id,
@@ -283,6 +301,7 @@ export function ExperimentCompareMetricsPage() {
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.totalCost.numDecreases ??
           0,
+        color: getExperimentColor(experiment.sequenceNumber),
       });
     });
     const builtInMetrics = [
@@ -359,6 +378,7 @@ export function ExperimentCompareMetricsPage() {
           value: compareExperimentMeanScore,
           numImprovements,
           numRegressions,
+          color: getExperimentColor(experiment.sequenceNumber),
         });
       }
       annotationMetrics.push({
@@ -368,7 +388,7 @@ export function ExperimentCompareMetricsPage() {
       });
     }
     return [...annotationMetrics, ...builtInMetrics];
-  }, [baseExperimentId, compareExperimentIds, data]);
+  }, [baseExperimentId, compareExperimentIds, data, getExperimentColor]);
 
   return (
     <View padding="size-200" width="100%">
@@ -416,12 +436,14 @@ function CompareExperimentMetric({
   baseExperimentValue,
   numImprovements,
   numRegressions,
+  color,
 }: {
   value: MetricValue;
   formatter?: (value: MetricValue) => string;
   baseExperimentValue: MetricValue;
   numImprovements: number;
   numRegressions: number;
+  color: string;
 }) {
   const { valueText, deltaText, percentageDeltaText } = useMemo(() => {
     const valueText = formatter(value);
@@ -445,12 +467,25 @@ function CompareExperimentMetric({
       percentageDeltaText,
     };
   }, [baseExperimentValue, formatter, value]);
+  const colorCSS = css`
+    color: ${color};
+  `;
   return (
     <Flex direction="row" justifyContent="space-between">
       <Flex direction="row" alignItems="center" gap="size-50">
-        <Text size="M">{valueText}</Text>
-        {deltaText && <Text size="S">{deltaText}</Text>}
-        {percentageDeltaText && <Text size="S">{percentageDeltaText}</Text>}
+        <Text css={colorCSS} size="M">
+          {valueText}
+        </Text>
+        {deltaText && (
+          <Text css={colorCSS} size="S">
+            {deltaText}
+          </Text>
+        )}
+        {percentageDeltaText && (
+          <Text css={colorCSS} size="S">
+            {percentageDeltaText}
+          </Text>
+        )}
       </Flex>
       <ImprovementAndRegressionCounter
         numImprovements={numImprovements}

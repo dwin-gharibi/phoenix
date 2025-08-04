@@ -50,6 +50,7 @@ import {
   AnnotationLabel,
   AnnotationTooltip,
 } from "@phoenix/components/annotation";
+import { useCategoryChartColors } from "@phoenix/components/chart";
 import { JSONBlock } from "@phoenix/components/code";
 import { JSONText } from "@phoenix/components/code/JSONText";
 import {
@@ -156,6 +157,16 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
   const [filterCondition, setFilterCondition] = useState("");
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const colors = useCategoryChartColors();
+  const getExperimentColor = useCallback(
+    (sequenceNumber: number) => {
+      const colorValues = Object.values(colors);
+      const numColors = colorValues.length;
+      const index = (sequenceNumber - 1) % numColors;
+      return colorValues[index];
+    },
+    [colors]
+  );
   const { data, loadNext, hasNext, isLoadingNext, refetch } =
     usePaginationFragment<
       ExperimentCompareTableQuery,
@@ -379,7 +390,10 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
             justifyContent="space-between"
           >
             <Flex direction="row" gap="size-100" wrap alignItems="center">
-              <SequenceNumberToken sequenceNumber={sequenceNumber} />
+              <SequenceNumberToken
+                sequenceNumber={sequenceNumber}
+                color={getExperimentColor(sequenceNumber)}
+              />
               <Text>{name}</Text>
               {experiment && <ExperimentMetadata experiment={experiment} />}
             </Flex>
@@ -490,9 +504,10 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
   }, [
     baseExperimentId,
     compareExperimentIds,
-    experimentInfoById,
     datasetId,
     displayFullText,
+    experimentInfoById,
+    getExperimentColor,
   ]);
 
   const columns = useMemo(() => {
@@ -1042,6 +1057,16 @@ function SelectedExampleDialog({
   datasetId: string;
   experimentInfoById: ExperimentInfoMap;
 }) {
+  const colors = useCategoryChartColors();
+  const getExperimentColor = useCallback(
+    (sequenceNumber: number) => {
+      const colorValues = Object.values(colors);
+      const numColors = colorValues.length;
+      const index = (sequenceNumber - 1) % numColors;
+      return colorValues[index];
+    },
+    [colors]
+  );
   return (
     <Dialog>
       <DialogContent>
@@ -1148,6 +1173,9 @@ function SelectedExampleDialog({
                           titleExtra={
                             <SequenceNumberToken
                               sequenceNumber={experiment?.sequenceNumber || 0}
+                              color={getExperimentColor(
+                                experiment?.sequenceNumber || 0
+                              )}
                             />
                           }
                         >
