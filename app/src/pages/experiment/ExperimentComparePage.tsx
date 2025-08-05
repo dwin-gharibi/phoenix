@@ -1,5 +1,4 @@
 import { startTransition, useCallback, useMemo } from "react";
-import { graphql, useFragment } from "react-relay";
 import {
   useLoaderData,
   useNavigate,
@@ -9,23 +8,18 @@ import {
 import invariant from "tiny-invariant";
 import { css } from "@emotion/react";
 
-import { Alert, Flex, Text, View } from "@phoenix/components";
-import { useExperimentColors } from "@phoenix/components/experiment";
+import { Alert, Flex, View } from "@phoenix/components";
 import {
   ExperimentCompareViewMode,
   ExperimentCompareViewModeToggle,
   isExperimentCompareViewMode,
 } from "@phoenix/components/experiment/ExperimentCompareViewModeToggle";
-import { SequenceNumberToken } from "@phoenix/components/experiment/SequenceNumberToken";
 import { useFeatureFlag } from "@phoenix/contexts/FeatureFlagsContext";
 import { experimentCompareLoader } from "@phoenix/pages/experiment/experimentCompareLoader";
 
-import type {
-  ExperimentComparePage_selectedExperiments$data,
-  ExperimentComparePage_selectedExperiments$key,
-} from "./__generated__/ExperimentComparePage_selectedExperiments.graphql";
 import { ExperimentCompareGridPage } from "./ExperimentCompareGridPage";
 import { ExperimentCompareMetricsPage } from "./ExperimentCompareMetricsPage";
+import { ExperimentCompareSelectedExperiments } from "./ExperimentCompareSelectedExperiments";
 import { ExperimentMultiSelector } from "./ExperimentMultiSelector";
 
 export function ExperimentComparePage() {
@@ -101,7 +95,7 @@ export function ExperimentComparePage() {
               padding-bottom: var(--ac-global-dimension-size-100);
             `}
           >
-            <SelectedExperiments dataRef={loaderData} />
+            <ExperimentCompareSelectedExperiments dataRef={loaderData} />
           </div>
           {showViewModeSelect && (
             <ExperimentCompareViewModeToggle
@@ -140,80 +134,4 @@ function ExperimentComparePageContent() {
       </View>
     );
   }
-}
-
-type Experiment = NonNullable<
-  ExperimentComparePage_selectedExperiments$data["dataset"]["experiments"]
->["edges"][number]["experiment"];
-
-function SelectedExperiments({
-  dataRef,
-}: {
-  dataRef: ExperimentComparePage_selectedExperiments$key;
-}) {
-  const [searchParams] = useSearchParams();
-  const [baseExperimentId = undefined, ...compareExperimentIds] =
-    searchParams.getAll("experimentId");
-  const { baseExperimentColor, getExperimentColor } = useExperimentColors();
-  const data = useFragment<ExperimentComparePage_selectedExperiments$key>(
-    graphql`
-      fragment ExperimentComparePage_selectedExperiments on Query
-      @argumentDefinitions(datasetId: { type: "ID!" }) {
-        dataset: node(id: $datasetId) {
-          ... on Dataset {
-            experiments {
-              edges {
-                experiment: node {
-                  id
-                  sequenceNumber
-                  name
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-    dataRef
-  );
-  const idToExperiment = useMemo(() => {
-    const idToExperiment: Record<string, Experiment> = {};
-    data.dataset.experiments?.edges.forEach((edge) => {
-      idToExperiment[edge.experiment.id] = edge.experiment;
-    });
-    return idToExperiment;
-  }, [data.dataset.experiments?.edges]);
-  if (baseExperimentId == null) {
-    return null;
-  }
-  const baseExperiment = idToExperiment[baseExperimentId];
-  const compareExperiments = compareExperimentIds.map(
-    (experimentId) => idToExperiment[experimentId]
-  );
-  return (
-    <Flex direction="row" gap="size-200">
-      {[baseExperiment, ...compareExperiments].map((experiment) => (
-        <Flex direction="row" gap="size-100" key={experiment.id}>
-          <SequenceNumberToken
-            sequenceNumber={experiment.sequenceNumber}
-            color={
-              baseExperimentId === experiment.id
-                ? baseExperimentColor
-                : getExperimentColor(experiment.sequenceNumber)
-            }
-          />
-          <Text
-            css={css`
-              white-space: nowrap;
-              max-width: var(--ac-global-dimension-size-2000);
-              overflow: hidden;
-              text-overflow: ellipsis;
-            `}
-          >
-            {experiment.name}
-          </Text>
-        </Flex>
-      ))}
-    </Flex>
-  );
 }

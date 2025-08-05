@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03bfce3710dd0f654cd7e5945af2ec0b>>
+ * @generated SignedSource<<a545a9201f5eef3189d2e09ffe989b92>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ExperimentComparePage_selectedExperiments$data = {
+export type ExperimentCompareSelectedExperiments$data = {
   readonly dataset: {
     readonly experiments?: {
       readonly edges: ReadonlyArray<{
@@ -22,11 +22,11 @@ export type ExperimentComparePage_selectedExperiments$data = {
       }>;
     };
   };
-  readonly " $fragmentType": "ExperimentComparePage_selectedExperiments";
+  readonly " $fragmentType": "ExperimentCompareSelectedExperiments";
 };
-export type ExperimentComparePage_selectedExperiments$key = {
-  readonly " $data"?: ExperimentComparePage_selectedExperiments$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ExperimentComparePage_selectedExperiments">;
+export type ExperimentCompareSelectedExperiments$key = {
+  readonly " $data"?: ExperimentCompareSelectedExperiments$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ExperimentCompareSelectedExperiments">;
 };
 
 const node: ReaderFragment = {
@@ -39,7 +39,7 @@ const node: ReaderFragment = {
   ],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ExperimentComparePage_selectedExperiments",
+  "name": "ExperimentCompareSelectedExperiments",
   "selections": [
     {
       "alias": "dataset",
@@ -124,6 +124,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b51444413f953cb7400b62d28b968353";
+(node as any).hash = "f6615acf2020cb5b475630d5669e0bf6";
 
 export default node;
