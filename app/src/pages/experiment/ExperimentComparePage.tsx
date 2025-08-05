@@ -1,4 +1,5 @@
 import { startTransition, useCallback, useMemo, useState } from "react";
+import { graphql, useFragment } from "react-relay";
 import {
   useLoaderData,
   useNavigate,
@@ -10,16 +11,22 @@ import { css } from "@emotion/react";
 
 import { Switch } from "@arizeai/components";
 
-import { Alert, Flex, View } from "@phoenix/components";
+import { Alert, Flex, Text, View } from "@phoenix/components";
+import { useExperimentColors } from "@phoenix/components/experiment";
 import {
   ExperimentCompareView,
   ExperimentCompareViewToggle,
   isExperimentCompareView,
 } from "@phoenix/components/experiment/ExperimentCompareViewToggle";
+import { SequenceNumberToken } from "@phoenix/components/experiment/SequenceNumberToken";
 import { useFeatureFlag } from "@phoenix/contexts/FeatureFlagsContext";
 import { experimentCompareLoader } from "@phoenix/pages/experiment/experimentCompareLoader";
 import { assertUnreachable } from "@phoenix/typeUtils";
 
+import type {
+  ExperimentComparePage_selectedExperiments$data,
+  ExperimentComparePage_selectedExperiments$key,
+} from "./__generated__/ExperimentComparePage_selectedExperiments.graphql";
 import { ExperimentCompareGridPage } from "./ExperimentCompareGridPage";
 import { ExperimentCompareMetricsPage } from "./ExperimentCompareMetricsPage";
 import { ExperimentMultiSelector } from "./ExperimentMultiSelector";
@@ -68,26 +75,31 @@ export function ExperimentComparePage() {
         flex="none"
       >
         <Flex direction="row" justifyContent="space-between" alignItems="end">
-          <ExperimentMultiSelector
-            dataRef={loaderData}
-            selectedBaseExperimentId={baseExperimentId}
-            selectedCompareExperimentIds={compareExperimentIds}
-            onChange={(newBaseExperimentId, newCompareExperimentIds) => {
-              startTransition(() => {
-                if (newBaseExperimentId == null) {
-                  navigate(`/datasets/${datasetId}/compare`);
-                } else {
-                  const queryParams = `?${[
-                    newBaseExperimentId,
-                    ...newCompareExperimentIds,
-                  ]
-                    .map((id) => `experimentId=${id}`)
-                    .join("&")}`;
-                  navigate(`/datasets/${datasetId}/compare${queryParams}`);
-                }
-              });
-            }}
-          />
+          <Flex direction="row" gap="size-200" alignItems="end">
+            <ExperimentMultiSelector
+              dataRef={loaderData}
+              selectedBaseExperimentId={baseExperimentId}
+              selectedCompareExperimentIds={compareExperimentIds}
+              onChange={(newBaseExperimentId, newCompareExperimentIds) => {
+                startTransition(() => {
+                  if (newBaseExperimentId == null) {
+                    navigate(`/datasets/${datasetId}/compare`);
+                  } else {
+                    const queryParams = `?${[
+                      newBaseExperimentId,
+                      ...newCompareExperimentIds,
+                    ]
+                      .map((id) => `experimentId=${id}`)
+                      .join("&")}`;
+                    navigate(`/datasets/${datasetId}/compare${queryParams}`);
+                  }
+                });
+              }}
+            />
+            <View paddingBottom="size-100">
+              <SelectedExperiments dataRef={loaderData} />
+            </View>
+          </Flex>
           <Flex direction="row" gap="size-275" alignItems="end">
             <View paddingBottom="size-75">
               <Switch
@@ -140,4 +152,71 @@ function ExperimentComparePageContent({
     return <ExperimentCompareMetricsPage />;
   }
   assertUnreachable(view);
+}
+
+type Experiment = NonNullable<
+  ExperimentComparePage_selectedExperiments$data["dataset"]["experiments"]
+>["edges"][number]["experiment"];
+
+function SelectedExperiments({
+  dataRef,
+}: {
+  dataRef: ExperimentComparePage_selectedExperiments$key;
+}) {
+  const [searchParams] = useSearchParams();
+  const [baseExperimentId = undefined, ...compareExperimentIds] =
+    searchParams.getAll("experimentId");
+  const { baseExperimentColor, getExperimentColor } = useExperimentColors();
+  const data = useFragment<ExperimentComparePage_selectedExperiments$key>(
+    graphql`
+      fragment ExperimentComparePage_selectedExperiments on Query
+      @argumentDefinitions(datasetId: { type: "ID!" }) {
+        dataset: node(id: $datasetId) {
+          ... on Dataset {
+            experiments {
+              edges {
+                experiment: node {
+                  id
+                  sequenceNumber
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+    dataRef
+  );
+  const idToExperiment = useMemo(() => {
+    const idToExperiment: Record<string, Experiment> = {};
+    data.dataset.experiments?.edges.forEach((edge) => {
+      idToExperiment[edge.experiment.id] = edge.experiment;
+    });
+    return idToExperiment;
+  }, [data.dataset.experiments?.edges]);
+  if (baseExperimentId == null) {
+    return null;
+  }
+  const baseExperiment = idToExperiment[baseExperimentId];
+  const compareExperiments = compareExperimentIds.map(
+    (experimentId) => idToExperiment[experimentId]
+  );
+  return (
+    <Flex direction="row" gap="size-200">
+      {[baseExperiment, ...compareExperiments].map((experiment) => (
+        <Flex direction="row" gap="size-100" key={experiment.id}>
+          <SequenceNumberToken
+            sequenceNumber={experiment.sequenceNumber}
+            color={
+              baseExperimentId === experiment.id
+                ? baseExperimentColor
+                : getExperimentColor(experiment.sequenceNumber)
+            }
+          />
+          <Text>{experiment.name}</Text>
+        </Flex>
+      ))}
+    </Flex>
+  );
 }
