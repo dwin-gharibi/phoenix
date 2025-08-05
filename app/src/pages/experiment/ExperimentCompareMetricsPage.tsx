@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { graphql, useFragment } from "react-relay";
 import { useLoaderData, useSearchParams } from "react-router";
 import { css } from "@emotion/react";
 
 import { Flex, Heading, Icon, Icons, Text, View } from "@phoenix/components";
-import { useCategoryChartColors } from "@phoenix/components/chart";
+import { useExperimentColors } from "@phoenix/components/experiment";
 import {
   costFormatter,
   latencyMsFormatter,
@@ -98,16 +98,7 @@ export function ExperimentCompareMetricsPage() {
     throw new Error("Empty state not yet implemented");
   }
   const loaderData = useLoaderData<typeof experimentCompareLoader>();
-  const colors = useCategoryChartColors();
-  const getExperimentColor = useCallback(
-    (sequenceNumber: number) => {
-      const colorValues = Object.values(colors);
-      const numColors = colorValues.length;
-      const index = (sequenceNumber - 1) % numColors;
-      return colorValues[index];
-    },
-    [colors]
-  );
+  const getExperimentColor = useExperimentColors();
   const data = useFragment<ExperimentCompareMetricsPage_experiments$key>(
     graphql`
       fragment ExperimentCompareMetricsPage_experiments on Query

@@ -50,7 +50,6 @@ import {
   AnnotationLabel,
   AnnotationTooltip,
 } from "@phoenix/components/annotation";
-import { useCategoryChartColors } from "@phoenix/components/chart";
 import { JSONBlock } from "@phoenix/components/code";
 import { JSONText } from "@phoenix/components/code/JSONText";
 import {
@@ -63,6 +62,7 @@ import {
   ExperimentAverageRunTokenCosts,
   ExperimentRunTokenCosts,
   ExperimentRunTokenCount,
+  useExperimentColors,
 } from "@phoenix/components/experiment";
 import { ExperimentActionMenu } from "@phoenix/components/experiment/ExperimentActionMenu";
 import { ExperimentAverageRunTokenCount } from "@phoenix/components/experiment/ExperimentAverageRunTokenCount";
@@ -157,16 +157,7 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
   const [filterCondition, setFilterCondition] = useState("");
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const colors = useCategoryChartColors();
-  const getExperimentColor = useCallback(
-    (sequenceNumber: number) => {
-      const colorValues = Object.values(colors);
-      const numColors = colorValues.length;
-      const index = (sequenceNumber - 1) % numColors;
-      return colorValues[index];
-    },
-    [colors]
-  );
+  const getExperimentColor = useExperimentColors();
   const { data, loadNext, hasNext, isLoadingNext, refetch } =
     usePaginationFragment<
       ExperimentCompareTableQuery,
@@ -1057,16 +1048,7 @@ function SelectedExampleDialog({
   datasetId: string;
   experimentInfoById: ExperimentInfoMap;
 }) {
-  const colors = useCategoryChartColors();
-  const getExperimentColor = useCallback(
-    (sequenceNumber: number) => {
-      const colorValues = Object.values(colors);
-      const numColors = colorValues.length;
-      const index = (sequenceNumber - 1) % numColors;
-      return colorValues[index];
-    },
-    [colors]
-  );
+  const getExperimentColor = useExperimentColors();
   return (
     <Dialog>
       <DialogContent>
