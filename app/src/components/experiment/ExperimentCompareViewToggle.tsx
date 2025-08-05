@@ -1,5 +1,15 @@
-import { Label, ToggleButton, ToggleButtonGroup } from "@phoenix/components";
-import { fieldBaseCSS } from "@phoenix/components/field/styles";
+import { css } from "@emotion/react";
+
+import {
+  Icon,
+  Icons,
+  Text,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
+  TooltipTrigger,
+  View,
+} from "@phoenix/components";
 
 export type ExperimentCompareView = "grid" | "metrics";
 
@@ -24,31 +34,56 @@ export function ExperimentCompareViewToggle({
   onViewChange: (newView: ExperimentCompareView) => void;
 }) {
   return (
-    <div css={fieldBaseCSS}>
-      <Label>view</Label>
-      <ToggleButtonGroup
-        aria-label="Toggle between grid and metrics view"
-        selectionMode="single"
-        selectedKeys={[view]}
-        onSelectionChange={(selection) => {
-          if (selection.size === 0) {
-            return;
-          }
-          const selectedKey = selection.keys().next().value;
-          if (isExperimentCompareView(selectedKey)) {
-            onViewChange(selectedKey);
-          } else {
-            throw new Error(`Unknown experiment compare view: ${selectedKey}`);
-          }
-        }}
-      >
-        <ToggleButton aria-label="grid view" id="grid">
-          Grid
-        </ToggleButton>
-        <ToggleButton aria-label="metrics view" id="metrics">
-          Metrics
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </div>
+    <ToggleButtonGroup
+      css={css`
+        flex-basis: fit-content;
+      `}
+      selectedKeys={[view]}
+      selectionMode="single"
+      onSelectionChange={(selection) => {
+        if (selection.size === 0) {
+          return;
+        }
+        const selectedKey = selection.keys().next().value;
+        if (isExperimentCompareView(selectedKey)) {
+          onViewChange(selectedKey);
+        } else {
+          throw new Error(`Unknown experiment compare view: ${selectedKey}`);
+        }
+      }}
+      size="M"
+    >
+      <TooltipTrigger delay={100}>
+        <ToggleButton id="grid" leadingVisual={<Icon svg={<Icons.Grid />} />} />
+        <Tooltip offset={10}>
+          <View
+            padding="size-100"
+            backgroundColor="light"
+            borderColor="dark"
+            borderWidth="thin"
+            borderRadius="small"
+          >
+            <Text>View experiment runs in a grid</Text>
+          </View>
+        </Tooltip>
+      </TooltipTrigger>
+      <TooltipTrigger delay={100}>
+        <ToggleButton
+          id="metrics"
+          leadingVisual={<Icon svg={<Icons.ListOutline />} />}
+        />
+        <Tooltip offset={10}>
+          <View
+            padding="size-100"
+            backgroundColor="light"
+            borderColor="dark"
+            borderWidth="thin"
+            borderRadius="small"
+          >
+            <Text>View experiment metrics</Text>
+          </View>
+        </Tooltip>
+      </TooltipTrigger>
+    </ToggleButtonGroup>
   );
 }
