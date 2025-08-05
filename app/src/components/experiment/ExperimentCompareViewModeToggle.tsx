@@ -75,7 +75,7 @@ export function ExperimentCompareViewModeToggle({
       <TooltipTrigger delay={100}>
         <ToggleButton
           id="metrics"
-          leadingVisual={<Icon svg={<Icons.ListOutline />} />}
+          leadingVisual={<Icon svg={<Icons.PieChart />} />}
         />
         <Tooltip offset={10}>
           <View
