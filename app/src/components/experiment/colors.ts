@@ -9,5 +9,5 @@ export function useExperimentColors() {
     const index = (sequenceNumber - 1) % numColors;
     return colorValues[index];
   }
-  return getExperimentColor;
+  return { getExperimentColor };
 }

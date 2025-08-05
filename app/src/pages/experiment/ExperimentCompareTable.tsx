@@ -157,7 +157,7 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
   const [filterCondition, setFilterCondition] = useState("");
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const getExperimentColor = useExperimentColors();
+  const { getExperimentColor } = useExperimentColors();
   const { data, loadNext, hasNext, isLoadingNext, refetch } =
     usePaginationFragment<
       ExperimentCompareTableQuery,
@@ -1048,7 +1048,7 @@ function SelectedExampleDialog({
   datasetId: string;
   experimentInfoById: ExperimentInfoMap;
 }) {
-  const getExperimentColor = useExperimentColors();
+  const { getExperimentColor } = useExperimentColors();
   return (
     <Dialog>
       <DialogContent>

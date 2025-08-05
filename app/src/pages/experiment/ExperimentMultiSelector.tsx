@@ -39,7 +39,7 @@ export function ExperimentMultiSelector(props: {
     onChange,
     dataRef,
   } = props;
-  const getExperimentColor = useExperimentColors();
+  const { getExperimentColor } = useExperimentColors();
 
   const data = useFragment(
     graphql`

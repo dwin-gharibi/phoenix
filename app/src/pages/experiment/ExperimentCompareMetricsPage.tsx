@@ -98,7 +98,7 @@ export function ExperimentCompareMetricsPage() {
     throw new Error("Empty state not yet implemented");
   }
   const loaderData = useLoaderData<typeof experimentCompareLoader>();
-  const getExperimentColor = useExperimentColors();
+  const { getExperimentColor } = useExperimentColors();
   const data = useFragment<ExperimentCompareMetricsPage_experiments$key>(
     graphql`
       fragment ExperimentCompareMetricsPage_experiments on Query
