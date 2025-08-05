@@ -75,31 +75,36 @@ export function ExperimentComparePage() {
         flex="none"
       >
         <Flex direction="row" justifyContent="space-between" alignItems="end">
-          <Flex direction="row" gap="size-200" alignItems="end">
-            <ExperimentMultiSelector
-              dataRef={loaderData}
-              selectedBaseExperimentId={baseExperimentId}
-              selectedCompareExperimentIds={compareExperimentIds}
-              onChange={(newBaseExperimentId, newCompareExperimentIds) => {
-                startTransition(() => {
-                  if (newBaseExperimentId == null) {
-                    navigate(`/datasets/${datasetId}/compare`);
-                  } else {
-                    const queryParams = `?${[
-                      newBaseExperimentId,
-                      ...newCompareExperimentIds,
-                    ]
-                      .map((id) => `experimentId=${id}`)
-                      .join("&")}`;
-                    navigate(`/datasets/${datasetId}/compare${queryParams}`);
-                  }
-                });
-              }}
-            />
-            <View paddingBottom="size-100">
-              <SelectedExperiments dataRef={loaderData} />
-            </View>
-          </Flex>
+          <ExperimentMultiSelector
+            dataRef={loaderData}
+            selectedBaseExperimentId={baseExperimentId}
+            selectedCompareExperimentIds={compareExperimentIds}
+            onChange={(newBaseExperimentId, newCompareExperimentIds) => {
+              startTransition(() => {
+                if (newBaseExperimentId == null) {
+                  navigate(`/datasets/${datasetId}/compare`);
+                } else {
+                  const queryParams = `?${[
+                    newBaseExperimentId,
+                    ...newCompareExperimentIds,
+                  ]
+                    .map((id) => `experimentId=${id}`)
+                    .join("&")}`;
+                  navigate(`/datasets/${datasetId}/compare${queryParams}`);
+                }
+              });
+            }}
+          />
+          <div
+            css={css`
+              flex: 1;
+              padding-left: var(--ac-global-dimension-size-200);
+              padding-right: var(--ac-global-dimension-size-200);
+              padding-bottom: var(--ac-global-dimension-size-100);
+            `}
+          >
+            <SelectedExperiments dataRef={loaderData} />
+          </div>
           <Flex direction="row" gap="size-275" alignItems="end">
             <View paddingBottom="size-75">
               <Switch
