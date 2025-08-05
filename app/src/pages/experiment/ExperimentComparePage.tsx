@@ -1,4 +1,4 @@
-import { startTransition, useCallback, useMemo, useState } from "react";
+import { startTransition, useCallback, useMemo } from "react";
 import { graphql, useFragment } from "react-relay";
 import {
   useLoaderData,
@@ -8,8 +8,6 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { css } from "@emotion/react";
-
-import { Switch } from "@arizeai/components";
 
 import { Alert, Flex, Text, View } from "@phoenix/components";
 import { useExperimentColors } from "@phoenix/components/experiment";
@@ -21,7 +19,6 @@ import {
 import { SequenceNumberToken } from "@phoenix/components/experiment/SequenceNumberToken";
 import { useFeatureFlag } from "@phoenix/contexts/FeatureFlagsContext";
 import { experimentCompareLoader } from "@phoenix/pages/experiment/experimentCompareLoader";
-import { assertUnreachable } from "@phoenix/typeUtils";
 
 import type {
   ExperimentComparePage_selectedExperiments$data,
@@ -33,10 +30,9 @@ import { ExperimentMultiSelector } from "./ExperimentMultiSelector";
 
 export function ExperimentComparePage() {
   const loaderData = useLoaderData<typeof experimentCompareLoader>();
-  const showModeSelect = useFeatureFlag("experimentEnhancements");
+  const showViewModeSelect = useFeatureFlag("experimentEnhancements");
   invariant(loaderData, "loaderData is required on ExperimentComparePage");
   // The text of most IO is too long so default to showing truncated text
-  const [displayFullText, setDisplayFullText] = useState(false);
   const { datasetId } = useParams();
   invariant(datasetId != null, "datasetId is required");
   const [searchParams] = useSearchParams();
@@ -107,31 +103,12 @@ export function ExperimentComparePage() {
           >
             <SelectedExperiments dataRef={loaderData} />
           </div>
-          <Flex direction="row" gap="size-275" alignItems="end">
-            <View paddingBottom="size-75">
-              <Switch
-                onChange={(isSelected) => {
-                  setDisplayFullText(isSelected);
-                }}
-                defaultSelected={false}
-                labelPlacement="start"
-              >
-                <Text
-                  css={css`
-                    white-space: nowrap;
-                  `}
-                >
-                  Full Text
-                </Text>
-              </Switch>
-            </View>
-            {showModeSelect && (
-              <ExperimentCompareViewToggle
-                view={view}
-                onViewChange={onViewChange}
-              />
-            )}
-          </Flex>
+          {showViewModeSelect && (
+            <ExperimentCompareViewToggle
+              view={view}
+              onViewChange={onViewChange}
+            />
+          )}
         </Flex>
       </View>
       {baseExperimentId == null ? (
@@ -141,30 +118,28 @@ export function ExperimentComparePage() {
           </Alert>
         </View>
       ) : (
-        <ExperimentComparePageContent
-          view={view}
-          displayFullText={displayFullText}
-        />
+        <ExperimentComparePageContent />
       )}
     </main>
   );
 }
 
-type ExperimentComparePageContentProps = {
-  view: ExperimentCompareView;
-  displayFullText: boolean;
-};
-
-function ExperimentComparePageContent({
-  view,
-  displayFullText,
-}: ExperimentComparePageContentProps) {
+function ExperimentComparePageContent() {
+  const [searchParams] = useSearchParams();
+  const view = searchParams.get("view") ?? "grid";
   if (view === "grid") {
-    return <ExperimentCompareGridPage displayFullText={displayFullText} />;
+    return <ExperimentCompareGridPage />;
   } else if (view === "metrics") {
     return <ExperimentCompareMetricsPage />;
+  } else {
+    return (
+      <View padding="size-200">
+        <Alert variant="info" title={`Invalid View Requested`}>
+          {`Please enter a valid view ("grid" or "metrics") in the URL query parameters.`}
+        </Alert>
+      </View>
+    );
   }
-  assertUnreachable(view);
 }
 
 type Experiment = NonNullable<

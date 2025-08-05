@@ -23,6 +23,8 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { css } from "@emotion/react";
 
+import { Switch } from "@arizeai/components";
+
 import {
   Button,
   Card,
@@ -97,10 +99,6 @@ type ExampleCompareTableProps = {
   datasetId: string;
   baseExperimentId: string;
   compareExperimentIds: string[];
-  /**
-   * Whether to display the full text of the text fields
-   */
-  displayFullText: boolean;
 };
 
 type Experiment = NonNullable<
@@ -152,8 +150,8 @@ const annotationTooltipExtraCSS = css`
 const PAGE_SIZE = 50;
 export function ExperimentCompareTable(props: ExampleCompareTableProps) {
   const [dialog, setDialog] = useState<ReactNode>(null);
-  const { datasetId, baseExperimentId, compareExperimentIds, displayFullText } =
-    props;
+  const [displayFullText, setDisplayFullText] = useState(false);
+  const { datasetId, baseExperimentId, compareExperimentIds } = props;
   const [filterCondition, setFilterCondition] = useState("");
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -606,9 +604,20 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
           borderBottomWidth="thin"
           flex="none"
         >
-          <ExperimentRunFilterConditionField
-            onValidCondition={setFilterCondition}
-          />
+          <Flex direction="row" gap="size-200" alignItems="center">
+            <ExperimentRunFilterConditionField
+              onValidCondition={setFilterCondition}
+            />
+            <Switch
+              onChange={(isSelected) => {
+                setDisplayFullText(isSelected);
+              }}
+              defaultSelected={false}
+              labelPlacement="start"
+            >
+              <Text>Full Text</Text>
+            </Switch>
+          </Flex>
         </View>
         <div
           css={tableWrapCSS}
