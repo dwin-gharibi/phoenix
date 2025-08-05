@@ -39,7 +39,7 @@ export function ExperimentMultiSelector(props: {
     onChange,
     dataRef,
   } = props;
-  const { getExperimentColor } = useExperimentColors();
+  const { baseExperimentColor, getExperimentColor } = useExperimentColors();
 
   const data = useFragment(
     graphql`
@@ -139,9 +139,14 @@ export function ExperimentMultiSelector(props: {
                           <Flex direction="row" gap="size-100">
                             <SequenceNumberToken
                               sequenceNumber={experiment.sequenceNumber}
-                              color={getExperimentColor(
-                                experiment.sequenceNumber
-                              )}
+                              color={
+                                selectedBaseExperimentId != null &&
+                                selectedBaseExperimentId === experiment.id
+                                  ? baseExperimentColor
+                                  : getExperimentColor(
+                                      experiment.sequenceNumber
+                                    )
+                              }
                             />
                             <Text>{experiment.name}</Text>
                           </Flex>

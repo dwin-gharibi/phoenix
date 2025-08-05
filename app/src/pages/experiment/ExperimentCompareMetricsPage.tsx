@@ -417,8 +417,18 @@ function BaseExperimentMetric({
   value: MetricValue;
   formatter?: (value: MetricValue) => string;
 }) {
+  const { baseExperimentColor } = useExperimentColors();
   const valueText = formatter(value);
-  return <Text size="M">{valueText}</Text>;
+  return (
+    <Text
+      css={css`
+        color: ${baseExperimentColor};
+      `}
+      size="M"
+    >
+      {valueText}
+    </Text>
+  );
 }
 
 function CompareExperimentMetric({
