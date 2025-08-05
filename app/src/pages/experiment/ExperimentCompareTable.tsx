@@ -419,7 +419,11 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
         const runComparisonItem = row.original.runComparisonMap[experimentId];
         const numRuns = runComparisonItem?.runs.length || 0;
         if (numRuns === 0) {
-          return <NotRunText />;
+          return (
+            <PaddedCell>
+              <NotRunText />
+            </PaddedCell>
+          );
         } else if (numRuns > 1) {
           // TODO: Support repetitions
           return <Text color="warning">{`${numRuns} runs`}</Text>;
