@@ -107,6 +107,7 @@ export function ExperimentMultiSelector(props: {
                     overflow: hidden;
                     text-overflow: ellipsis;
                   `}
+                  title={data.baseExperiment.name}
                 >
                   {data.baseExperiment.name}
                 </Text>
@@ -162,6 +163,7 @@ export function ExperimentMultiSelector(props: {
                                 overflow: hidden;
                                 text-overflow: ellipsis;
                               `}
+                              title={experiment.name}
                             >
                               {experiment.name}
                             </Text>
@@ -232,6 +234,7 @@ export function ExperimentMultiSelector(props: {
                                     overflow: hidden;
                                     text-overflow: ellipsis;
                                   `}
+                                  title={experiment.name}
                                 >
                                   {experiment.name}
                                 </Text>

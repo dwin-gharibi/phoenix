@@ -399,6 +399,7 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
                     overflow: hidden;
                     text-overflow: ellipsis;
                   `}
+                  title={name}
                 >
                   {name}
                 </Text>

@@ -86,6 +86,7 @@ export function ExperimentCompareSelectedExperiments({
               overflow: hidden;
               text-overflow: ellipsis;
             `}
+            title={experiment.name}
           >
             {experiment.name}
           </Text>
