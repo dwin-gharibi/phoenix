@@ -375,11 +375,10 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
             <Flex
               direction="row"
               gap="size-100"
-              wrap
               alignItems="center"
               justifyContent="space-between"
             >
-              <Flex direction="row" gap="size-100" wrap alignItems="center">
+              <Flex direction="row" gap="size-100" alignItems="center">
                 <span
                   css={css`
                     width: 8px;
@@ -405,12 +404,7 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
                 </Text>
                 {experiment && <ExperimentMetadata experiment={experiment} />}
               </Flex>
-              <Flex
-                direction="row"
-                wrap
-                justifyContent="end"
-                alignItems="center"
-              >
+              <Flex direction="row" justifyContent="end" alignItems="center">
                 <ExperimentActionMenu
                   experimentId={experimentId}
                   metadata={metadata}
