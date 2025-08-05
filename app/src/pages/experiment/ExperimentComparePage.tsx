@@ -87,16 +87,14 @@ export function ExperimentComparePage() {
               });
             }}
           />
-          <div
-            css={css`
-              flex: 1;
-              padding-left: var(--ac-global-dimension-size-200);
-              padding-right: var(--ac-global-dimension-size-200);
-              padding-bottom: var(--ac-global-dimension-size-100);
-            `}
+          <View
+            flex="1"
+            paddingStart="size-200"
+            paddingEnd="size-200"
+            paddingBottom="size-100"
           >
             <ExperimentCompareSelectedExperiments dataRef={loaderData} />
-          </div>
+          </View>
           {showViewModeSelect && (
             <ExperimentCompareViewModeToggle
               viewMode={viewMode}
