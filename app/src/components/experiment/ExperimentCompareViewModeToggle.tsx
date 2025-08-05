@@ -36,7 +36,7 @@ export function ExperimentCompareViewModeToggle({
   onViewModeChange,
 }: {
   viewMode: ExperimentCompareViewMode;
-  onViewModeChange: (newView: ExperimentCompareViewMode) => void;
+  onViewModeChange: (newViewMode: ExperimentCompareViewMode) => void;
 }) {
   return (
     <ToggleButtonGroup
@@ -53,7 +53,9 @@ export function ExperimentCompareViewModeToggle({
         if (isExperimentCompareViewMode(selectedKey)) {
           onViewModeChange(selectedKey);
         } else {
-          throw new Error(`Unknown experiment compare view: ${selectedKey}`);
+          throw new Error(
+            `Unknown experiment compare view mode: ${selectedKey}`
+          );
         }
       }}
       size="M"
