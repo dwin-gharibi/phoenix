@@ -8,26 +8,26 @@ import { useExperimentColors } from "@phoenix/components/experiment";
 import { SequenceNumberToken } from "@phoenix/components/experiment/SequenceNumberToken";
 
 import type {
-  ExperimentCompareSelectedExperiments$data,
-  ExperimentCompareSelectedExperiments$key,
-} from "./__generated__/ExperimentCompareSelectedExperiments.graphql";
+  ExperimentCompareSelectedExperiments_dataset$data,
+  ExperimentCompareSelectedExperiments_dataset$key,
+} from "./__generated__/ExperimentCompareSelectedExperiments_dataset.graphql";
 
 type Experiment = NonNullable<
-  ExperimentCompareSelectedExperiments$data["dataset"]["experiments"]
+  ExperimentCompareSelectedExperiments_dataset$data["dataset"]["experiments"]
 >["edges"][number]["experiment"];
 
 export function ExperimentCompareSelectedExperiments({
   dataRef,
 }: {
-  dataRef: ExperimentCompareSelectedExperiments$key;
+  dataRef: ExperimentCompareSelectedExperiments_dataset$key;
 }) {
   const [searchParams] = useSearchParams();
   const [baseExperimentId = undefined, ...compareExperimentIds] =
     searchParams.getAll("experimentId");
   const { baseExperimentColor, getExperimentColor } = useExperimentColors();
-  const data = useFragment<ExperimentCompareSelectedExperiments$key>(
+  const data = useFragment<ExperimentCompareSelectedExperiments_dataset$key>(
     graphql`
-      fragment ExperimentCompareSelectedExperiments on Query
+      fragment ExperimentCompareSelectedExperiments_dataset on Query
       @argumentDefinitions(datasetId: { type: "ID!" }) {
         dataset: node(id: $datasetId) {
           ... on Dataset {
