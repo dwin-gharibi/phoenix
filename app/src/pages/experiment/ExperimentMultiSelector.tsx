@@ -81,23 +81,6 @@ export function ExperimentMultiSelector(props: {
       }) ?? []
     );
   }, [data]);
-  const baseExperimentDisplayText = useMemo(
-    () =>
-      data.baseExperiment != null ? (
-        <Flex direction="row" gap="size-75" alignItems="center">
-          {data.baseExperiment.sequenceNumber && (
-            <SequenceNumberToken
-              sequenceNumber={data.baseExperiment.sequenceNumber}
-              color={baseExperimentColor}
-            />
-          )}
-          <Text>{data.baseExperiment.name}</Text>
-        </Flex>
-      ) : (
-        "No base experiment selected"
-      ),
-    [data.baseExperiment, baseExperimentColor]
-  );
   const compareExperimentsDisplayText = useMemo(() => {
     const numExperiments = selectedCompareExperimentIds.length;
     return numExperiments > 0
@@ -112,7 +95,28 @@ export function ExperimentMultiSelector(props: {
         <Label>base experiment</Label>
         <DialogTrigger>
           <Button size="M" trailingVisual={<SelectChevronUpDownIcon />}>
-            {baseExperimentDisplayText}
+            {data.baseExperiment != null ? (
+              <Flex direction="row" gap="size-75" alignItems="center">
+                {data.baseExperiment.sequenceNumber && (
+                  <SequenceNumberToken
+                    sequenceNumber={data.baseExperiment.sequenceNumber}
+                    color={baseExperimentColor}
+                  />
+                )}
+                <Text
+                  css={css`
+                    white-space: nowrap;
+                    max-width: var(--ac-global-dimension-size-2000);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  `}
+                >
+                  {data.baseExperiment.name}
+                </Text>
+              </Flex>
+            ) : (
+              "No base experiment selected"
+            )}
           </Button>
           <Popover placement="bottom start">
             <Dialog>
@@ -162,7 +166,16 @@ export function ExperimentMultiSelector(props: {
                                     )
                               }
                             />
-                            <Text>{experiment.name}</Text>
+                            <Text
+                              css={css`
+                                white-space: nowrap;
+                                max-width: var(--ac-global-dimension-size-2000);
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                              `}
+                            >
+                              {experiment.name}
+                            </Text>
                           </Flex>
                           <Text size="XS" color="text-700">
                             {new Date(experiment.createdAt).toLocaleString()}
@@ -224,7 +237,18 @@ export function ExperimentMultiSelector(props: {
                                     experiment.sequenceNumber
                                   )}
                                 />
-                                <Text>{experiment.name}</Text>
+                                <Text
+                                  css={css`
+                                    white-space: nowrap;
+                                    max-width: var(
+                                      --ac-global-dimension-size-2000
+                                    );
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                  `}
+                                >
+                                  {experiment.name}
+                                </Text>
                               </Flex>
                               <Text size="XS" color="text-700">
                                 {new Date(

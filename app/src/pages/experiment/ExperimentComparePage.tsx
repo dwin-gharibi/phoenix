@@ -116,7 +116,13 @@ export function ExperimentComparePage() {
                 defaultSelected={false}
                 labelPlacement="start"
               >
-                Full Text
+                <Text
+                  css={css`
+                    white-space: nowrap;
+                  `}
+                >
+                  Full Text
+                </Text>
               </Switch>
             </View>
             {showModeSelect && (
@@ -221,7 +227,16 @@ function SelectedExperiments({
                 : getExperimentColor(experiment.sequenceNumber)
             }
           />
-          <Text>{experiment.name}</Text>
+          <Text
+            css={css`
+              white-space: nowrap;
+              max-width: var(--ac-global-dimension-size-2000);
+              overflow: hidden;
+              text-overflow: ellipsis;
+            `}
+          >
+            {experiment.name}
+          </Text>
         </Flex>
       ))}
     </Flex>

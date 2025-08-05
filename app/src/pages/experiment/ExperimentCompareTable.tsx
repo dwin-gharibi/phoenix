@@ -389,7 +389,15 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
                     : getExperimentColor(sequenceNumber)
                 }
               />
-              <Text>{name}</Text>
+              <Text
+                css={css`
+                  max-width: var(--ac-global-dimension-size-2000);
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                `}
+              >
+                {name}
+              </Text>
               {experiment && <ExperimentMetadata experiment={experiment} />}
             </Flex>
             <Flex direction="row" wrap justifyContent="end" alignItems="center">
