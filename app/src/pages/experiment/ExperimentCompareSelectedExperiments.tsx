@@ -60,13 +60,25 @@ export function ExperimentCompareSelectedExperiments({
     (experimentId) => idToExperiment[experimentId]
   );
   return (
-    <Flex direction="row" gap="size-200">
+    <div
+      css={css`
+        display: flex;
+        gap: var(--ac-global-dimension-size-200);
+        overflow: hidden;
+        width: 100%;
+      `}
+    >
       {compareExperiments.map((experiment, index) => (
         <Flex
           direction="row"
           gap="size-100"
           alignItems="center"
           key={experiment.id}
+          css={css`
+            flex: 0 1 auto;
+            min-width: 96px;
+            overflow: hidden;
+          `}
         >
           <span
             css={css`
@@ -82,9 +94,10 @@ export function ExperimentCompareSelectedExperiments({
           <Text
             css={css`
               white-space: nowrap;
-              max-width: var(--ac-global-dimension-size-2000);
               overflow: hidden;
               text-overflow: ellipsis;
+              flex: 1;
+              min-width: 0;
             `}
             title={experiment.name}
           >
@@ -92,6 +105,6 @@ export function ExperimentCompareSelectedExperiments({
           </Text>
         </Flex>
       ))}
-    </Flex>
+    </div>
   );
 }
