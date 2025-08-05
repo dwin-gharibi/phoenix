@@ -240,7 +240,7 @@ export function ExperimentCompareMetricsPage() {
       compareExperiments: [],
       formatter: costFormatter,
     };
-    compareExperiments.forEach((experiment) => {
+    compareExperiments.forEach((experiment, index) => {
       latencyMetric.compareExperiments.push({
         experimentId: experiment.id,
         value: experiment.averageRunLatencyMs,
@@ -248,7 +248,7 @@ export function ExperimentCompareMetricsPage() {
           compareExperimentIdToCounts[experiment.id]?.latency.numIncreases ?? 0,
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.latency.numDecreases ?? 0,
-        color: getExperimentColor(experiment.sequenceNumber),
+        color: getExperimentColor(index),
       });
       promptTokensMetric.compareExperiments.push({
         experimentId: experiment.id,
@@ -259,7 +259,7 @@ export function ExperimentCompareMetricsPage() {
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.promptTokenCount
             .numDecreases ?? 0,
-        color: getExperimentColor(experiment.sequenceNumber),
+        color: getExperimentColor(index),
       });
       completionTokensMetric.compareExperiments.push({
         experimentId: experiment.id,
@@ -270,7 +270,7 @@ export function ExperimentCompareMetricsPage() {
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.completionTokenCount
             .numDecreases ?? 0,
-        color: getExperimentColor(experiment.sequenceNumber),
+        color: getExperimentColor(index),
       });
       totalTokensMetric.compareExperiments.push({
         experimentId: experiment.id,
@@ -281,7 +281,7 @@ export function ExperimentCompareMetricsPage() {
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.totalTokenCount
             .numDecreases ?? 0,
-        color: getExperimentColor(experiment.sequenceNumber),
+        color: getExperimentColor(index),
       });
       totalCostMetric.compareExperiments.push({
         experimentId: experiment.id,
@@ -292,7 +292,7 @@ export function ExperimentCompareMetricsPage() {
         numRegressions:
           compareExperimentIdToCounts[experiment.id]?.totalCost.numDecreases ??
           0,
-        color: getExperimentColor(experiment.sequenceNumber),
+        color: getExperimentColor(index),
       });
     });
     const builtInMetrics = [
@@ -339,7 +339,7 @@ export function ExperimentCompareMetricsPage() {
         continue;
       }
       const annotationMetricCompareExperiments: CompareExperimentData[] = [];
-      for (const experiment of compareExperiments) {
+      for (const [index, experiment] of compareExperiments.entries()) {
         const compareExperimentId = experiment.id;
         let compareExperimentMeanScore: MetricValue = null;
         if (
@@ -369,7 +369,7 @@ export function ExperimentCompareMetricsPage() {
           value: compareExperimentMeanScore,
           numImprovements,
           numRegressions,
-          color: getExperimentColor(experiment.sequenceNumber),
+          color: getExperimentColor(index),
         });
       }
       annotationMetrics.push({

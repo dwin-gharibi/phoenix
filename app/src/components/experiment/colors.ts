@@ -5,12 +5,13 @@ export function useExperimentColors() {
   const colorValues = Object.values(colors);
   const numColors = colorValues.length;
 
-  function getExperimentColor(sequenceNumber: number) {
-    const index = (sequenceNumber - 1) % numColors;
+  function getExperimentColor(comparisonIndex: number) {
+    const index = comparisonIndex % numColors;
     return colorValues[index];
   }
+
   return {
     getExperimentColor,
-    baseExperimentColor: "var(--ac-global-color-grey-600)",
+    baseExperimentColor: "var(--ac-global-color-grey-700)",
   };
 }

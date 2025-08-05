@@ -43,11 +43,11 @@ const tokenBaseCSS = css`
   align-items: center;
   gap: var(--ac-global-dimension-static-size-100);
   font-size: var(--ac-global-dimension-static-font-size-75);
+  font-weight: 400;
   line-height: var(--ac-global-line-height-s);
   padding: 0 var(--ac-global-dimension-static-size-100);
   border-radius: var(--ac-global-rounding-large);
-  border: 1px solid
-    lch(from var(--ac-internal-token-color) calc((l) * infinity) c h / 0.3);
+  border: 1px solid var(--ac-global-color-grey-400);
   color: lch(from var(--ac-internal-token-color) calc((50 - l) * infinity) 0 0);
   user-select: none;
 
@@ -70,7 +70,6 @@ const tokenBaseCSS = css`
 
   &[data-theme="light"] {
     background: var(--ac-internal-token-color);
-    border-color: var(--ac-internal-token-color);
   }
 
   &[data-theme="dark"] {

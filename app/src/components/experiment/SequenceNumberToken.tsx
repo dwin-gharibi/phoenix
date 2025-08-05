@@ -2,7 +2,7 @@ import { Token } from "@phoenix/components/token";
 
 export function SequenceNumberToken({
   sequenceNumber,
-  color = "var(--ac-global-color-yellow-500)",
+  color,
 }: {
   sequenceNumber: number;
   color?: string;

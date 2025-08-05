@@ -24,7 +24,7 @@ export function ExperimentCompareSelectedExperiments({
   const [searchParams] = useSearchParams();
   const [baseExperimentId = undefined, ...compareExperimentIds] =
     searchParams.getAll("experimentId");
-  const { baseExperimentColor, getExperimentColor } = useExperimentColors();
+  const { getExperimentColor } = useExperimentColors();
   const data = useFragment<ExperimentCompareSelectedExperiments_dataset$key>(
     graphql`
       fragment ExperimentCompareSelectedExperiments_dataset on Query
@@ -56,22 +56,29 @@ export function ExperimentCompareSelectedExperiments({
   if (baseExperimentId == null) {
     return null;
   }
-  const baseExperiment = idToExperiment[baseExperimentId];
   const compareExperiments = compareExperimentIds.map(
     (experimentId) => idToExperiment[experimentId]
   );
   return (
     <Flex direction="row" gap="size-200">
-      {[baseExperiment, ...compareExperiments].map((experiment) => (
-        <Flex direction="row" gap="size-100" key={experiment.id}>
-          <SequenceNumberToken
-            sequenceNumber={experiment.sequenceNumber}
-            color={
-              baseExperimentId === experiment.id
-                ? baseExperimentColor
-                : getExperimentColor(experiment.sequenceNumber)
-            }
+      {compareExperiments.map((experiment, index) => (
+        <Flex
+          direction="row"
+          gap="size-100"
+          alignItems="center"
+          key={experiment.id}
+        >
+          <span
+            css={css`
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              background-color: ${getExperimentColor(index)};
+              display: inline-block;
+              flex-shrink: 0;
+            `}
           />
+          <SequenceNumberToken sequenceNumber={experiment.sequenceNumber} />
           <Text
             css={css`
               white-space: nowrap;

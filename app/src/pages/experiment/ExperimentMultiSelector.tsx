@@ -17,7 +17,6 @@ import {
   SelectChevronUpDownIcon,
   Text,
 } from "@phoenix/components";
-import { useExperimentColors } from "@phoenix/components/experiment";
 import { SequenceNumberToken } from "@phoenix/components/experiment/SequenceNumberToken";
 import { fieldBaseCSS } from "@phoenix/components/field/styles";
 import { selectCSS } from "@phoenix/components/select/styles";
@@ -39,7 +38,6 @@ export function ExperimentMultiSelector(props: {
     onChange,
     dataRef,
   } = props;
-  const { baseExperimentColor, getExperimentColor } = useExperimentColors();
 
   const data = useFragment(
     graphql`
@@ -100,7 +98,6 @@ export function ExperimentMultiSelector(props: {
                 {data.baseExperiment.sequenceNumber && (
                   <SequenceNumberToken
                     sequenceNumber={data.baseExperiment.sequenceNumber}
-                    color={baseExperimentColor}
                   />
                 )}
                 <Text
@@ -157,13 +154,6 @@ export function ExperimentMultiSelector(props: {
                           <Flex direction="row" gap="size-100">
                             <SequenceNumberToken
                               sequenceNumber={experiment.sequenceNumber}
-                              color={
-                                selectedBaseExperimentId === experiment.id
-                                  ? baseExperimentColor
-                                  : getExperimentColor(
-                                      experiment.sequenceNumber
-                                    )
-                              }
                             />
                             <Text
                               css={css`
@@ -232,9 +222,6 @@ export function ExperimentMultiSelector(props: {
                               <Flex direction="row" gap="size-100">
                                 <SequenceNumberToken
                                   sequenceNumber={experiment.sequenceNumber}
-                                  color={getExperimentColor(
-                                    experiment.sequenceNumber
-                                  )}
                                 />
                                 <Text
                                   css={css`

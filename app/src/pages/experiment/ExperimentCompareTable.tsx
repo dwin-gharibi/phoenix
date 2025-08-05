@@ -155,7 +155,7 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
   const [filterCondition, setFilterCondition] = useState("");
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { baseExperimentColor, getExperimentColor } = useExperimentColors();
+  const { getExperimentColor, baseExperimentColor } = useExperimentColors();
   const { data, loadNext, hasNext, isLoadingNext, refetch } =
     usePaginationFragment<
       ExperimentCompareTableQuery,
@@ -363,149 +363,161 @@ export function ExperimentCompareTable(props: ExampleCompareTableProps) {
   }, [displayFullText, setDialog]);
 
   const experimentColumns: ColumnDef<TableRow>[] = useMemo(() => {
-    return [baseExperimentId, ...compareExperimentIds].map((experimentId) => ({
-      header: () => {
-        const experiment = experimentInfoById[experimentId];
-        const name = experiment?.name;
-        const metadata = experiment?.metadata;
-        const projectId = experiment?.project?.id;
-        const sequenceNumber = experiment?.sequenceNumber || 0;
-        return (
-          <Flex
-            direction="row"
-            gap="size-100"
-            wrap
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Flex direction="row" gap="size-100" wrap alignItems="center">
-              <SequenceNumberToken
-                sequenceNumber={sequenceNumber}
-                color={
-                  experimentId === baseExperimentId
-                    ? baseExperimentColor
-                    : getExperimentColor(sequenceNumber)
-                }
-              />
-              <Text
-                css={css`
-                  max-width: var(--ac-global-dimension-size-2000);
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                `}
-              >
-                {name}
-              </Text>
-              {experiment && <ExperimentMetadata experiment={experiment} />}
-            </Flex>
-            <Flex direction="row" wrap justifyContent="end" alignItems="center">
-              <ExperimentActionMenu
-                experimentId={experimentId}
-                metadata={metadata}
-                isQuiet={true}
-                projectId={projectId}
-                canDeleteExperiment={false}
-              />
-            </Flex>
-          </Flex>
-        );
-      },
-      accessorKey: experimentId,
-      minSize: 500,
-      enableSorting: false,
-      cell: ({ row }) => {
-        const runComparisonItem = row.original.runComparisonMap[experimentId];
-        const numRuns = runComparisonItem?.runs.length || 0;
-        if (numRuns === 0) {
+    return [baseExperimentId, ...compareExperimentIds].map(
+      (experimentId, columnIndex) => ({
+        header: () => {
+          const experiment = experimentInfoById[experimentId];
+          const name = experiment?.name;
+          const metadata = experiment?.metadata;
+          const projectId = experiment?.project?.id;
+          const sequenceNumber = experiment?.sequenceNumber || 0;
           return (
+            <Flex
+              direction="row"
+              gap="size-100"
+              wrap
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Flex direction="row" gap="size-100" wrap alignItems="center">
+                <span
+                  css={css`
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background-color: ${experimentId === baseExperimentId
+                      ? baseExperimentColor
+                      : getExperimentColor(columnIndex - 1)};
+                    display: inline-block;
+                    flex-shrink: 0;
+                  `}
+                />
+                <SequenceNumberToken sequenceNumber={sequenceNumber} />
+                <Text
+                  css={css`
+                    max-width: var(--ac-global-dimension-size-2000);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  `}
+                >
+                  {name}
+                </Text>
+                {experiment && <ExperimentMetadata experiment={experiment} />}
+              </Flex>
+              <Flex
+                direction="row"
+                wrap
+                justifyContent="end"
+                alignItems="center"
+              >
+                <ExperimentActionMenu
+                  experimentId={experimentId}
+                  metadata={metadata}
+                  isQuiet={true}
+                  projectId={projectId}
+                  canDeleteExperiment={false}
+                />
+              </Flex>
+            </Flex>
+          );
+        },
+        accessorKey: experimentId,
+        minSize: 500,
+        enableSorting: false,
+        cell: ({ row }) => {
+          const runComparisonItem = row.original.runComparisonMap[experimentId];
+          const numRuns = runComparisonItem?.runs.length || 0;
+          if (numRuns === 0) {
+            return (
+              <PaddedCell>
+                <NotRunText />
+              </PaddedCell>
+            );
+          } else if (numRuns > 1) {
+            // TODO: Support repetitions
+            return <Text color="warning">{`${numRuns} runs`}</Text>;
+          }
+          // Only show the first run
+          const run = runComparisonItem?.runs[0];
+
+          let traceButton = null;
+          const traceId = run?.trace?.traceId;
+          const projectId = run?.trace?.projectId;
+          if (traceId && projectId) {
+            traceButton = (
+              <TooltipTrigger>
+                <IconButton
+                  className="trace-button"
+                  size="S"
+                  aria-label="View run trace"
+                  onPress={() => {
+                    setDialog(
+                      <TraceDetailsDialog
+                        traceId={traceId}
+                        projectId={projectId}
+                        title={`Experiment Run Trace`}
+                      />
+                    );
+                  }}
+                >
+                  <Icon svg={<Icons.Trace />} />
+                </IconButton>
+                <Tooltip>
+                  <TooltipArrow />
+                  view run trace
+                </Tooltip>
+              </TooltipTrigger>
+            );
+          }
+          const runControls = (
+            <>
+              <TooltipTrigger>
+                <IconButton
+                  className="expand-button"
+                  size="S"
+                  aria-label="View example run details"
+                  onPress={() => {
+                    setDialog(
+                      <SelectedExampleDialog
+                        selectedExample={row.original}
+                        datasetId={datasetId}
+                        experimentInfoById={experimentInfoById}
+                      />
+                    );
+                  }}
+                >
+                  <Icon svg={<Icons.ExpandOutline />} />
+                </IconButton>
+                <Tooltip>
+                  <TooltipArrow />
+                  view experiment run
+                </Tooltip>
+              </TooltipTrigger>
+              {traceButton}
+            </>
+          );
+
+          return run ? (
+            <>
+              <CellTop extra={runControls}>
+                <ExperimentRunMetadata {...run} />
+              </CellTop>
+              <PaddedCell>
+                <ExperimentRunOutput
+                  {...run}
+                  displayFullText={displayFullText}
+                  setDialog={setDialog}
+                />
+              </PaddedCell>
+            </>
+          ) : (
             <PaddedCell>
               <NotRunText />
             </PaddedCell>
           );
-        } else if (numRuns > 1) {
-          // TODO: Support repetitions
-          return <Text color="warning">{`${numRuns} runs`}</Text>;
-        }
-        // Only show the first run
-        const run = runComparisonItem?.runs[0];
-
-        let traceButton = null;
-        const traceId = run?.trace?.traceId;
-        const projectId = run?.trace?.projectId;
-        if (traceId && projectId) {
-          traceButton = (
-            <TooltipTrigger>
-              <IconButton
-                className="trace-button"
-                size="S"
-                aria-label="View run trace"
-                onPress={() => {
-                  setDialog(
-                    <TraceDetailsDialog
-                      traceId={traceId}
-                      projectId={projectId}
-                      title={`Experiment Run Trace`}
-                    />
-                  );
-                }}
-              >
-                <Icon svg={<Icons.Trace />} />
-              </IconButton>
-              <Tooltip>
-                <TooltipArrow />
-                view run trace
-              </Tooltip>
-            </TooltipTrigger>
-          );
-        }
-        const runControls = (
-          <>
-            <TooltipTrigger>
-              <IconButton
-                className="expand-button"
-                size="S"
-                aria-label="View example run details"
-                onPress={() => {
-                  setDialog(
-                    <SelectedExampleDialog
-                      selectedExample={row.original}
-                      datasetId={datasetId}
-                      experimentInfoById={experimentInfoById}
-                    />
-                  );
-                }}
-              >
-                <Icon svg={<Icons.ExpandOutline />} />
-              </IconButton>
-              <Tooltip>
-                <TooltipArrow />
-                view experiment run
-              </Tooltip>
-            </TooltipTrigger>
-            {traceButton}
-          </>
-        );
-
-        return run ? (
-          <>
-            <CellTop extra={runControls}>
-              <ExperimentRunMetadata {...run} />
-            </CellTop>
-            <PaddedCell>
-              <ExperimentRunOutput
-                {...run}
-                displayFullText={displayFullText}
-                setDialog={setDialog}
-              />
-            </PaddedCell>
-          </>
-        ) : (
-          <PaddedCell>
-            <NotRunText />
-          </PaddedCell>
-        );
-      },
-    }));
+        },
+      })
+    );
   }, [
     baseExperimentId,
     baseExperimentColor,
@@ -1074,7 +1086,7 @@ function SelectedExampleDialog({
   datasetId: string;
   experimentInfoById: ExperimentInfoMap;
 }) {
-  const { baseExperimentColor, getExperimentColor } = useExperimentColors();
+  const { getExperimentColor, baseExperimentColor } = useExperimentColors();
   return (
     <Dialog>
       <DialogContent>
@@ -1182,16 +1194,27 @@ function SelectedExampleDialog({
                             title={experiment?.name ?? ""}
                             titleExtra={
                               experiment && (
-                                <SequenceNumberToken
-                                  sequenceNumber={experiment.sequenceNumber}
-                                  color={
-                                    runItemIndex === 0
-                                      ? baseExperimentColor
-                                      : getExperimentColor(
-                                          experiment.sequenceNumber
-                                        )
-                                  }
-                                />
+                                <Flex
+                                  direction="row"
+                                  gap="size-100"
+                                  alignItems="center"
+                                >
+                                  <span
+                                    css={css`
+                                      width: 8px;
+                                      height: 8px;
+                                      border-radius: 50%;
+                                      background-color: ${runItemIndex === 0
+                                        ? baseExperimentColor
+                                        : getExperimentColor(runItemIndex - 1)};
+                                      display: inline-block;
+                                      flex-shrink: 0;
+                                    `}
+                                  />
+                                  <SequenceNumberToken
+                                    sequenceNumber={experiment.sequenceNumber}
+                                  />
+                                </Flex>
                               )
                             }
                           >
