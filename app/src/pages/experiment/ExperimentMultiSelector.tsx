@@ -158,7 +158,6 @@ export function ExperimentMultiSelector(props: {
                             <SequenceNumberToken
                               sequenceNumber={experiment.sequenceNumber}
                               color={
-                                selectedBaseExperimentId != null &&
                                 selectedBaseExperimentId === experiment.id
                                   ? baseExperimentColor
                                   : getExperimentColor(
