@@ -12,10 +12,10 @@ import { css } from "@emotion/react";
 import { Alert, Flex, Text, View } from "@phoenix/components";
 import { useExperimentColors } from "@phoenix/components/experiment";
 import {
-  ExperimentCompareView,
-  ExperimentCompareViewToggle,
-  isExperimentCompareView,
-} from "@phoenix/components/experiment/ExperimentCompareViewToggle";
+  ExperimentCompareViewMode,
+  ExperimentCompareViewModeToggle,
+  isExperimentCompareViewMode,
+} from "@phoenix/components/experiment/ExperimentCompareViewModeToggle";
 import { SequenceNumberToken } from "@phoenix/components/experiment/SequenceNumberToken";
 import { useFeatureFlag } from "@phoenix/contexts/FeatureFlagsContext";
 import { experimentCompareLoader } from "@phoenix/pages/experiment/experimentCompareLoader";
@@ -38,18 +38,18 @@ export function ExperimentComparePage() {
   const [searchParams] = useSearchParams();
   const [baseExperimentId = undefined, ...compareExperimentIds] =
     searchParams.getAll("experimentId");
-  const view = useMemo(() => {
-    const view = searchParams.get("view");
-    if (isExperimentCompareView(view)) {
-      return view;
+  const viewMode = useMemo(() => {
+    const viewMode = searchParams.get("view");
+    if (isExperimentCompareViewMode(viewMode)) {
+      return viewMode;
     }
     return "grid";
   }, [searchParams]);
   const navigate = useNavigate();
 
-  const onViewChange = useCallback(
-    (view: ExperimentCompareView) => {
-      searchParams.set("view", view);
+  const onViewModeChange = useCallback(
+    (viewMode: ExperimentCompareViewMode) => {
+      searchParams.set("view", viewMode);
       navigate(`/datasets/${datasetId}/compare?${searchParams.toString()}`);
     },
     [datasetId, navigate, searchParams]
@@ -104,9 +104,9 @@ export function ExperimentComparePage() {
             <SelectedExperiments dataRef={loaderData} />
           </div>
           {showViewModeSelect && (
-            <ExperimentCompareViewToggle
-              view={view}
-              onViewChange={onViewChange}
+            <ExperimentCompareViewModeToggle
+              viewMode={viewMode}
+              onViewModeChange={onViewModeChange}
             />
           )}
         </Flex>
@@ -126,15 +126,15 @@ export function ExperimentComparePage() {
 
 function ExperimentComparePageContent() {
   const [searchParams] = useSearchParams();
-  const view = searchParams.get("view") ?? "grid";
-  if (view === "grid") {
+  const viewMode = searchParams.get("view") ?? "grid";
+  if (viewMode === "grid") {
     return <ExperimentCompareGridPage />;
-  } else if (view === "metrics") {
+  } else if (viewMode === "metrics") {
     return <ExperimentCompareMetricsPage />;
   } else {
     return (
       <View padding="size-200">
-        <Alert variant="info" title={`Invalid View Requested`}>
+        <Alert variant="info" title={`Invalid View Mode Requested`}>
           {`Please enter a valid view ("grid" or "metrics") in the URL query parameters.`}
         </Alert>
       </View>

@@ -11,42 +11,47 @@ import {
   View,
 } from "@phoenix/components";
 
-export type ExperimentCompareView = "grid" | "metrics";
+export type ExperimentCompareViewMode = "grid" | "metrics";
 
 /**
- * TypeGuard for the experiment compare view
+ * TypeGuard for the experiment compare view mode
  */
-export function isExperimentCompareView(
-  maybeView: unknown
-): maybeView is ExperimentCompareView {
-  const experimentCompareViews: ExperimentCompareView[] = ["grid", "metrics"];
+export function isExperimentCompareViewMode(
+  maybeViewMode: unknown
+): maybeViewMode is ExperimentCompareViewMode {
+  const experimentCompareViewModes: ExperimentCompareViewMode[] = [
+    "grid",
+    "metrics",
+  ];
   return (
-    typeof maybeView === "string" &&
-    experimentCompareViews.includes(maybeView as ExperimentCompareView)
+    typeof maybeViewMode === "string" &&
+    experimentCompareViewModes.includes(
+      maybeViewMode as ExperimentCompareViewMode
+    )
   );
 }
 
-export function ExperimentCompareViewToggle({
-  view,
-  onViewChange,
+export function ExperimentCompareViewModeToggle({
+  viewMode,
+  onViewModeChange,
 }: {
-  view: ExperimentCompareView;
-  onViewChange: (newView: ExperimentCompareView) => void;
+  viewMode: ExperimentCompareViewMode;
+  onViewModeChange: (newView: ExperimentCompareViewMode) => void;
 }) {
   return (
     <ToggleButtonGroup
       css={css`
         flex-basis: fit-content;
       `}
-      selectedKeys={[view]}
+      selectedKeys={[viewMode]}
       selectionMode="single"
       onSelectionChange={(selection) => {
         if (selection.size === 0) {
           return;
         }
         const selectedKey = selection.keys().next().value;
-        if (isExperimentCompareView(selectedKey)) {
-          onViewChange(selectedKey);
+        if (isExperimentCompareViewMode(selectedKey)) {
+          onViewModeChange(selectedKey);
         } else {
           throw new Error(`Unknown experiment compare view: ${selectedKey}`);
         }
