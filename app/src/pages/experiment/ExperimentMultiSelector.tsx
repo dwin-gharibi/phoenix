@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { graphql, useFragment } from "react-relay";
 import invariant from "tiny-invariant";
 import { css } from "@emotion/react";
@@ -86,6 +86,19 @@ export function ExperimentMultiSelector(props: {
       : "No experiments selected";
   }, [selectedCompareExperimentIds]);
 
+  // Automatically select the first experiment if no base experiment is selected
+  useEffect(() => {
+    if (!selectedBaseExperimentId && experiments.length > 0) {
+      const firstExperiment = experiments[0];
+      onChange(firstExperiment.id, selectedCompareExperimentIds);
+    }
+  }, [
+    selectedBaseExperimentId,
+    experiments,
+    onChange,
+    selectedCompareExperimentIds,
+  ]);
+
   // TODO: refactor to a multi-select component. See #8139
   return (
     <Flex direction="row" gap="size-100">
@@ -128,6 +141,11 @@ export function ExperimentMultiSelector(props: {
                 }
                 onSelectionChange={(keys) => {
                   const [baseExperimentId] = keys;
+                  // Prevent deselecting the base experiment
+                  if (!baseExperimentId) {
+                    return;
+                  }
+
                   invariant(
                     typeof baseExperimentId !== "number",
                     "baseExperimentId should not be a number"

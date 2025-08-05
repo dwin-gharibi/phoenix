@@ -105,8 +105,8 @@ export function ExperimentComparePage() {
       </View>
       {baseExperimentId == null ? (
         <View padding="size-200">
-          <Alert variant="info" title="No Base Experiment Selected">
-            Please select a base experiment.
+          <Alert variant="info" title="No Experiments Available">
+            This dataset does not have any experiments to compare.
           </Alert>
         </View>
       ) : (
