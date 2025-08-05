@@ -52,7 +52,7 @@ export function ExperimentCompareSelectedExperiments({
       idToExperiment[edge.experiment.id] = edge.experiment;
     });
     return idToExperiment;
-  }, [data.dataset.experiments?.edges]);
+  }, [data]);
   if (baseExperimentId == null) {
     return null;
   }
