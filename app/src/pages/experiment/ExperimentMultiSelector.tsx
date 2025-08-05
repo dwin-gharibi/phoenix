@@ -66,6 +66,7 @@ export function ExperimentMultiSelector(props: {
           @include(if: $hasBaseExperiment) {
           ... on Experiment {
             id
+            sequenceNumber
             name
           }
         }
@@ -81,8 +82,21 @@ export function ExperimentMultiSelector(props: {
     );
   }, [data]);
   const baseExperimentDisplayText = useMemo(
-    () => data.baseExperiment?.name ?? "No base experiment selected",
-    [data.baseExperiment]
+    () =>
+      data.baseExperiment != null ? (
+        <Flex direction="row" gap="size-75" alignItems="center">
+          {data.baseExperiment.sequenceNumber && (
+            <SequenceNumberToken
+              sequenceNumber={data.baseExperiment.sequenceNumber}
+              color={baseExperimentColor}
+            />
+          )}
+          <Text>{data.baseExperiment.name}</Text>
+        </Flex>
+      ) : (
+        "No base experiment selected"
+      ),
+    [data.baseExperiment, baseExperimentColor]
   );
   const compareExperimentsDisplayText = useMemo(() => {
     const numExperiments = selectedCompareExperimentIds.length;
