@@ -1141,6 +1141,7 @@ class Experiments:
                     reference=example["output"],
                     input=example["input"],
                     metadata=example["metadata"],
+                    example=example,
                 )
             except BaseException as exc:
                 span.record_exception(exc)
@@ -2037,6 +2038,7 @@ class AsyncExperiments:
                     reference=example["output"],
                     input=example["input"],
                     metadata=example["metadata"],
+                    example=example,
                 )
             except BaseException as exc:
                 span.record_exception(exc)
