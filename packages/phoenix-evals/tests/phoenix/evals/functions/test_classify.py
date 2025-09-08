@@ -27,23 +27,23 @@ from phoenix.evals.default_templates import (
     TOXICITY_PROMPT_TEMPLATE,
     TOXICITY_PROMPT_TEMPLATE_BASE_TEMPLATE,
 )
-from phoenix.evals.evaluators import LLMEvaluator
+from phoenix.evals.evaluators import LegacyLLMEvaluator
 from phoenix.evals.executors import ExecutionStatus
 from phoenix.evals.models.base import ExtraInfo
 from phoenix.evals.utils import _EXPLANATION, _FUNCTION_NAME, _RESPONSE
 
 
 @pytest.fixture
-def toxicity_evaluator(openai_model: OpenAIModel) -> LLMEvaluator:
-    return LLMEvaluator(
+def toxicity_evaluator(openai_model: OpenAIModel) -> LegacyLLMEvaluator:
+    return LegacyLLMEvaluator(
         template=TOXICITY_PROMPT_TEMPLATE,
         model=openai_model,
     )
 
 
 @pytest.fixture
-def relevance_evaluator(openai_model: OpenAIModel) -> LLMEvaluator:
-    return LLMEvaluator(
+def relevance_evaluator(openai_model: OpenAIModel) -> LegacyLLMEvaluator:
+    return LegacyLLMEvaluator(
         template=RAG_RELEVANCY_PROMPT_TEMPLATE,
         model=openai_model,
     )
@@ -986,8 +986,8 @@ def test_classify_skips_missing_input_with_when_exit_on_error_false(
 def test_run_evals_outputs_dataframes_with_labels_scores_and_explanations_with_function_calls(
     running_event_loop_mock: bool,
     respx_mock: respx.mock,
-    toxicity_evaluator: LLMEvaluator,
-    relevance_evaluator: LLMEvaluator,
+    toxicity_evaluator: LegacyLLMEvaluator,
+    relevance_evaluator: LegacyLLMEvaluator,
 ) -> None:
     for matcher, label, explanation in [
         (
@@ -1076,8 +1076,8 @@ def test_run_evals_outputs_dataframes_with_labels_scores_and_explanations_with_f
 @pytest.mark.respx(base_url="https://api.openai.com/v1/chat/completions")
 def test_run_evals_outputs_dataframes_with_labels_scores_and_explanations(
     respx_mock: respx.mock,
-    toxicity_evaluator: LLMEvaluator,
-    relevance_evaluator: LLMEvaluator,
+    toxicity_evaluator: LegacyLLMEvaluator,
+    relevance_evaluator: LegacyLLMEvaluator,
 ) -> None:
     for matcher, response in [
         (
@@ -1156,8 +1156,8 @@ def test_run_evals_outputs_dataframes_with_labels_scores_and_explanations(
 @pytest.mark.respx(base_url="https://api.openai.com/v1/chat/completions")
 def test_run_evals_outputs_dataframes_with_just_labels_and_scores_when_invoked_with_function_calls(
     respx_mock: respx.mock,
-    toxicity_evaluator: LLMEvaluator,
-    relevance_evaluator: LLMEvaluator,
+    toxicity_evaluator: LegacyLLMEvaluator,
+    relevance_evaluator: LegacyLLMEvaluator,
 ) -> None:
     for matcher, response in [
         (
@@ -1233,8 +1233,8 @@ def test_run_evals_outputs_dataframes_with_just_labels_and_scores_when_invoked_w
 @pytest.mark.respx(base_url="https://api.openai.com/v1/chat/completions")
 def test_run_evals_outputs_dataframes_with_just_labels_and_scores(
     respx_mock: respx.mock,
-    toxicity_evaluator: LLMEvaluator,
-    relevance_evaluator: LLMEvaluator,
+    toxicity_evaluator: LegacyLLMEvaluator,
+    relevance_evaluator: LegacyLLMEvaluator,
 ) -> None:
     for matcher, response in [
         (
@@ -1315,7 +1315,7 @@ def test_run_evals_outputs_dataframes_with_just_labels_and_scores(
 def test_run_evals_preserves_index(
     index: pd.Index,
     respx_mock: respx.mock,
-    relevance_evaluator: LLMEvaluator,
+    relevance_evaluator: LegacyLLMEvaluator,
 ) -> None:
     for matcher, response in [
         (
@@ -1378,7 +1378,7 @@ def test_run_evals_preserves_index(
 def test_run_evals_succeeds_regardless_of_whether_running_event_loop_exists(
     running_event_loop_mock: bool,
     respx_mock: respx.mock,
-    relevance_evaluator: LLMEvaluator,
+    relevance_evaluator: LegacyLLMEvaluator,
 ) -> None:
     for matcher, response in [
         (
@@ -1438,7 +1438,7 @@ def test_run_evals_succeeds_regardless_of_whether_running_event_loop_exists(
 @pytest.mark.respx(base_url="https://api.openai.com/v1/chat/completions")
 def test_run_evals_produces_expected_output_when_llm_outputs_unexpected_data(
     respx_mock: respx.mock,
-    relevance_evaluator: LLMEvaluator,
+    relevance_evaluator: LegacyLLMEvaluator,
 ) -> None:
     for matcher, response in [
         (
@@ -1507,7 +1507,7 @@ def test_run_evals_produces_expected_output_when_llm_outputs_unexpected_data(
 @pytest.mark.respx(base_url="https://api.openai.com/v1/chat/completions", assert_all_called=False)
 def test_run_evals_fails_gracefully_on_error(
     respx_mock: respx.mock,
-    relevance_evaluator: LLMEvaluator,
+    relevance_evaluator: LegacyLLMEvaluator,
 ) -> None:
     # simulate an error
     for matcher, response in [
