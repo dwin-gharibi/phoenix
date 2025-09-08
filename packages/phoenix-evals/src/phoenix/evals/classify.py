@@ -26,7 +26,7 @@ import pandas as pd
 from pandas import DataFrame
 from typing_extensions import TypeAlias
 
-from phoenix.evals.evaluators import LLMEvaluator
+from phoenix.evals.evaluators import LegacyLLMEvaluator
 from phoenix.evals.exceptions import PhoenixTemplateMappingError
 from phoenix.evals.executors import ExecutionStatus, get_executor_on_sync_context
 from phoenix.evals.models import BaseModel, OpenAIModel, set_verbosity
@@ -378,13 +378,13 @@ def llm_classify(
 
 
 class RunEvalsPayload(NamedTuple):
-    evaluator: LLMEvaluator
+    evaluator: LegacyLLMEvaluator
     record: Record
 
 
 def run_evals(
     dataframe: DataFrame,
-    evaluators: List[LLMEvaluator],
+    evaluators: List[LegacyLLMEvaluator],
     provide_explanation: bool = False,
     use_function_calling_if_available: bool = True,
     verbose: bool = False,
@@ -401,7 +401,7 @@ def run_evals(
             column names in the dataframe (extra columns unrelated to the template
             are permitted).
 
-        evaluators (List[LLMEvaluator]): A list of evaluators.
+        evaluators (List[LegacyLLMEvaluator]): A list of evaluators.
 
         provide_explanation (bool, optional): If True, provides an explanation
             for each evaluation. A column named "explanation" is added to each

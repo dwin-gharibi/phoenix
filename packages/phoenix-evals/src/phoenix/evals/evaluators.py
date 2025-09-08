@@ -19,7 +19,7 @@ Record = Mapping[str, str]
 _TAB = " " * 4
 
 
-class LLMEvaluator:
+class LegacyLLMEvaluator:
     """
     Leverages an LLM to evaluate individual records.
     """
@@ -29,7 +29,7 @@ class LLMEvaluator:
         model: BaseModel,
         template: ClassificationTemplate,
     ) -> None:
-        """Initializer for LLMEvaluator.
+        """Initializer for LegacyLLMEvaluator.
 
         Args:
             model (BaseEvalModel): The LLM model to use for evaluation.
@@ -158,7 +158,7 @@ class LLMEvaluator:
         return label, score, explanation
 
 
-class HallucinationEvaluator(LLMEvaluator):
+class HallucinationEvaluator(LegacyLLMEvaluator):
     """
     Leverages an LLM to evaluate whether a response (stored under an "output"
     column) is a hallucination given a query (stored under an "input" column)
@@ -176,7 +176,7 @@ class HallucinationEvaluator(LLMEvaluator):
         super().__init__(model=model, template=EvalCriteria.HALLUCINATION.value)
 
 
-class RelevanceEvaluator(LLMEvaluator):
+class RelevanceEvaluator(LegacyLLMEvaluator):
     """
     Leverages an LLM to evaluate whether a retrieved document (stored under a
     "reference" column) is relevant or irrelevant to the corresponding query
@@ -194,7 +194,7 @@ class RelevanceEvaluator(LLMEvaluator):
         super().__init__(model=model, template=EvalCriteria.RELEVANCE.value)
 
 
-class QAEvaluator(LLMEvaluator):
+class QAEvaluator(LegacyLLMEvaluator):
     """
     Leverages an LLM to evaluate whether a response (stored under an "output"
     column) is correct or incorrect given a query (stored under an "input"
@@ -213,7 +213,7 @@ class QAEvaluator(LLMEvaluator):
         super().__init__(model=model, template=EvalCriteria.QA.value)
 
 
-class ToxicityEvaluator(LLMEvaluator):
+class ToxicityEvaluator(LegacyLLMEvaluator):
     """
     Leverages an LLM to evaluate whether the string stored under the "input"
     column contains racist, sexist, chauvinistic, biased, or otherwise toxic
@@ -231,7 +231,7 @@ class ToxicityEvaluator(LLMEvaluator):
         super().__init__(model=model, template=EvalCriteria.TOXICITY.value)
 
 
-class SummarizationEvaluator(LLMEvaluator):
+class SummarizationEvaluator(LegacyLLMEvaluator):
     """
     Leverages an LLM to evaluate whether a summary (stored under an
     "output" column) provides an accurate synopsis of an input document
@@ -249,7 +249,7 @@ class SummarizationEvaluator(LLMEvaluator):
         super().__init__(model=model, template=EvalCriteria.SUMMARIZATION.value)
 
 
-class SQLEvaluator(LLMEvaluator):
+class SQLEvaluator(LegacyLLMEvaluator):
     """
     Leverages an LLM to evaluate whether a generated SQL query (stored under
     the "query_gen" column) and a response (stored under the "response" column)

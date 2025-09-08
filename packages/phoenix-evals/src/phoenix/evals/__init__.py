@@ -33,7 +33,7 @@ from .default_templates import (
 )
 from .evaluators import (
     HallucinationEvaluator,
-    LLMEvaluator,
+    LegacyLLMEvaluator,
     QAEvaluator,
     RelevanceEvaluator,
     SQLEvaluator,
@@ -210,7 +210,7 @@ __all__ = [
     "TOOL_CALLING_PROMPT_RAILS_MAP",
     "NOT_PARSABLE",
     "run_evals",
-    "LLMEvaluator",
+    "LegacyLLMEvaluator",
     "HallucinationEvaluator",
     "QAEvaluator",
     "RelevanceEvaluator",

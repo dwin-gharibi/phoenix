@@ -8,7 +8,7 @@ from phoenix.evals import (
     RAG_RELEVANCY_PROMPT_TEMPLATE,
     ClassificationTemplate,
     HallucinationEvaluator,
-    LLMEvaluator,
+    LegacyLLMEvaluator,
     OpenAIModel,
     QAEvaluator,
     RelevanceEvaluator,
@@ -27,7 +27,7 @@ def test_llm_evaluator_evaluate_outputs_label_when_model_produces_expected_outpu
     openai_model: OpenAIModel, relevance_template: ClassificationTemplate
 ) -> None:
     openai_model._generate = MagicMock(return_value="relevant ")
-    evaluator = LLMEvaluator(openai_model, relevance_template)
+    evaluator = LegacyLLMEvaluator(openai_model, relevance_template)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
@@ -44,7 +44,7 @@ def test_llm_evaluator_evaluate_outputs_not_parseable_when_model_produces_unexpe
     openai_model: OpenAIModel, relevance_template: str
 ) -> None:
     openai_model._generate = MagicMock(return_value="not-in-the-rails")
-    evaluator = LLMEvaluator(openai_model, relevance_template)
+    evaluator = LegacyLLMEvaluator(openai_model, relevance_template)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
@@ -62,7 +62,7 @@ def test_llm_evaluator_evaluate_outputs_label_and_explanation_when_model_produce
 ) -> None:
     output = 'EXPLANATION: A very good explanationLABEL: "relevant"'
     openai_model._generate = MagicMock(return_value=output)
-    evaluator = LLMEvaluator(openai_model, relevance_template)
+    evaluator = LegacyLLMEvaluator(openai_model, relevance_template)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
@@ -81,7 +81,7 @@ def test_llm_evaluator_evaluate_outputs_not_parseable_and_raw_response_when_outp
 ) -> None:
     output = 'EXPLANATION: A very good explanationLABEL: "not-a-rail"'
     openai_model._generate = MagicMock(return_value=output)
-    evaluator = LLMEvaluator(openai_model, relevance_template)
+    evaluator = LegacyLLMEvaluator(openai_model, relevance_template)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
@@ -100,7 +100,7 @@ def test_llm_evaluator_evaluate_outputs_not_parseable_and_raw_response_for_unpar
 ) -> None:
     output = 'Unexpected format: "rail"'
     openai_model._generate = MagicMock(return_value=output)
-    evaluator = LLMEvaluator(openai_model, relevance_template)
+    evaluator = LegacyLLMEvaluator(openai_model, relevance_template)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
@@ -118,7 +118,7 @@ def test_llm_evaluator_evaluate_outputs_label_when_called_with_function_call(
     openai_model: OpenAIModel, relevance_template: ClassificationTemplate
 ) -> None:
     openai_model._generate = MagicMock(return_value=f'{{"{_RESPONSE}": "relevant"}}')
-    evaluator = LLMEvaluator(openai_model, relevance_template)
+    evaluator = LegacyLLMEvaluator(openai_model, relevance_template)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
@@ -137,7 +137,7 @@ def test_llm_evaluator_evaluate_outputs_label_and_explanation_when_called_with_f
     openai_model._generate = MagicMock(
         return_value=f'{{"{_EXPLANATION}": "explanation", "{_RESPONSE}": "relevant"}}'
     )
-    evaluator = LLMEvaluator(openai_model, relevance_template)
+    evaluator = LegacyLLMEvaluator(openai_model, relevance_template)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
@@ -154,7 +154,7 @@ def test_llm_evaluator_evaluate_makes_best_effort_attempt_to_parse_invalid_funct
     openai_model: OpenAIModel, relevance_template: ClassificationTemplate
 ) -> None:
     openai_model._generate = MagicMock(return_value=f'{{"{_RESPONSE}": "relevant"')  # invalid JSON
-    evaluator = LLMEvaluator(openai_model, relevance_template)
+    evaluator = LegacyLLMEvaluator(openai_model, relevance_template)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
@@ -198,7 +198,7 @@ def test_llm_evaluator_evaluate_makes_best_effort_attempt_to_parse_invalid_funct
     ],
 )
 def test_evaluator_evaluate_outputs_expected_label_when_model_produces_expected_output(
-    evaluator_cls: LLMEvaluator,
+    evaluator_cls: LegacyLLMEvaluator,
     expected_label: str,
     openai_model: OpenAIModel,
 ) -> None:
@@ -226,7 +226,7 @@ def test_llm_evaluator_evaluate_outputs_score_as_zero_with_custom_template_witho
         explanation_template="Is the {reference} relevant to the {input}? Explain.",
     )
     openai_model._generate = MagicMock(return_value="relevant ")
-    evaluator = LLMEvaluator(openai_model, custom_template_without_scores)
+    evaluator = LegacyLLMEvaluator(openai_model, custom_template_without_scores)
     label, score, explanation = evaluator.evaluate(
         {
             "input": "What is the capital of California?",
