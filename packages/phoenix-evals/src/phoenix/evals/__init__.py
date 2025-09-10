@@ -6,7 +6,7 @@ from importlib.metadata import version
 from types import ModuleType
 from typing import Any, Dict, List, Optional, Set
 
-from . import preview, rate_limiters, tracing
+from . import llm, preview, rate_limiters, tracing
 from .classify import llm_classify, run_evals
 from .default_templates import (
     CODE_FUNCTIONALITY_PROMPT_RAILS_MAP,
@@ -222,4 +222,5 @@ __all__ = [
     "preview",
     "tracing",
     "rate_limiters",
+    "llm",
 ]

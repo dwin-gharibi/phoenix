@@ -11,9 +11,9 @@ from pydantic import BaseModel, ValidationError, create_model
 from typing_extensions import Mapping
 
 from phoenix.evals.executors import AsyncExecutor, ExecutionDetails, SyncExecutor
+from phoenix.evals.llm import LLM
+from phoenix.evals.llm.types import ObjectGenerationMethod
 
-from .llm import LLM
-from .llm.types import ObjectGenerationMethod
 from .templating import Template
 from .utils import remap_eval_input
 
