@@ -6,6 +6,7 @@ from importlib.metadata import version
 from types import ModuleType
 from typing import Any, Dict, List, Optional, Set
 
+from . import preview, tracing
 from .classify import llm_classify, run_evals
 from .default_templates import (
     CODE_FUNCTIONALITY_PROMPT_RAILS_MAP,
@@ -166,7 +167,6 @@ class ExperimentalModuleLoader(Loader):
 
 sys.meta_path.insert(0, ExperimentalModuleFinder())
 
-from . import preview  # noqa: E402
 
 __version__ = version("arize-phoenix-evals")
 
@@ -175,7 +175,6 @@ __all__ = [
     "download_benchmark_dataset",
     "llm_classify",
     "llm_generate",
-    "preview",
     "OpenAIModel",
     "AnthropicModel",
     "GeminiModel",
@@ -220,4 +219,6 @@ __all__ = [
     "HALLUCINATION_SPAN_PROMPT_TEMPLATE",
     "QA_SPAN_PROMPT_TEMPLATE",
     "TOOL_CALLING_SPAN_PROMPT_TEMPLATE",
+    "preview",
+    "tracing",
 ]
