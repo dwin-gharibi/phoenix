@@ -23,7 +23,7 @@ from strawberry.scalars import JSON as JSONScalarType
 from typing_extensions import TypeAlias, assert_never, override
 
 from phoenix.config import getenv
-from phoenix.evals.models.rate_limiters import (
+from phoenix.evals.rate_limiters import (
     AsyncCallable,
     GenericType,
     ParameterSpec,
