@@ -6,7 +6,7 @@ from typing import Any, Generator, NamedTuple, Optional, Sequence, Tuple
 
 from typing_extensions import TypeVar, Union
 
-from phoenix.evals.models.rate_limiters import RateLimiter
+from phoenix.evals.rate_limiters import RateLimiter
 from phoenix.evals.templates import MultimodalPrompt
 
 T = TypeVar("T", bound=type)

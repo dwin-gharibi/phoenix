@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import override
 
 from phoenix.evals.models.base import BaseModel, ExtraInfo, Usage
-from phoenix.evals.models.rate_limiters import RateLimiter
+from phoenix.evals.rate_limiters import RateLimiter
 from phoenix.evals.templates import MultimodalPrompt
 from phoenix.evals.utils import printif
 

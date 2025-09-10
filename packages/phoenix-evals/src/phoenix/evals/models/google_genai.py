@@ -16,7 +16,7 @@ from phoenix.evals.exceptions import (
     PhoenixUnsupportedImageFormat,
 )
 from phoenix.evals.models.base import BaseModel, ExtraInfo, Usage
-from phoenix.evals.models.rate_limiters import RateLimiter
+from phoenix.evals.rate_limiters import RateLimiter
 from phoenix.evals.templates import MultimodalPrompt, PromptPartContentType
 from phoenix.evals.utils import (
     get_audio_format_from_base64,

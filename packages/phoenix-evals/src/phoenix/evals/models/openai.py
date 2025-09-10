@@ -21,7 +21,7 @@ from typing_extensions import assert_never, override
 
 from phoenix.evals.exceptions import PhoenixContextLimitExceeded, PhoenixUnsupportedAudioFormat
 from phoenix.evals.models.base import BaseModel, ExtraInfo, Usage
-from phoenix.evals.models.rate_limiters import RateLimiter
+from phoenix.evals.rate_limiters import RateLimiter
 from phoenix.evals.templates import MultimodalPrompt, PromptPartContentType
 from phoenix.evals.utils import get_audio_format_from_base64
 
