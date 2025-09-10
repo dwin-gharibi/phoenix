@@ -26,9 +26,9 @@ import pandas as pd
 from pandas import DataFrame
 from typing_extensions import TypeAlias
 
-from phoenix.evals.evaluators import LegacyLLMEvaluator
 from phoenix.evals.exceptions import PhoenixTemplateMappingError
 from phoenix.evals.executors import ExecutionStatus, get_executor_on_sync_context
+from phoenix.evals.legacy.evaluators import LegacyLLMEvaluator
 from phoenix.evals.models import BaseModel, OpenAIModel, set_verbosity
 from phoenix.evals.models.base import Usage
 from phoenix.evals.templates import (

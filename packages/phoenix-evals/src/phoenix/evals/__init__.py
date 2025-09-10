@@ -32,7 +32,8 @@ from .default_templates import (
     USER_FRUSTRATION_PROMPT_RAILS_MAP,
     USER_FRUSTRATION_PROMPT_TEMPLATE,
 )
-from .evaluators import (
+from .generate import llm_generate
+from .legacy.evaluators import (
     HallucinationEvaluator,
     LegacyLLMEvaluator,
     QAEvaluator,
@@ -41,7 +42,6 @@ from .evaluators import (
     SummarizationEvaluator,
     ToxicityEvaluator,
 )
-from .generate import llm_generate
 from .models import (
     AnthropicModel,
     BedrockModel,
