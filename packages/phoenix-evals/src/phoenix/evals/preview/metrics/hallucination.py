@@ -26,9 +26,9 @@ source="llm", direction="maximize")]
 from pydantic import BaseModel, Field
 
 from phoenix.evals.llm import LLM
+from phoenix.evals.templating import Template
 
 from ..evaluators import ClassificationEvaluator
-from ..templating import Template
 
 
 # --- Built-in LLM evaluator: hallucination ---

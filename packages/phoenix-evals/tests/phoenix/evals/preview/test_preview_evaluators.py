@@ -15,7 +15,7 @@ from phoenix.evals.preview.evaluators import (
     list_evaluators,
     to_thread,
 )
-from phoenix.evals.preview.templating import Template
+from phoenix.evals.templating import Template
 
 
 # --- Shared Mock Classes ---

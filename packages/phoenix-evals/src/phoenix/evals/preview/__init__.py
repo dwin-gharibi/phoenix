@@ -1,4 +1,4 @@
-from . import metrics, templating
+from . import metrics
 from .evaluators import (
     ClassificationEvaluator,
     EvalInput,
@@ -25,6 +25,5 @@ __all__ = [
     "list_evaluators",
     "create_evaluator",
     "metrics",
-    "templating",
     "bind_evaluator",
 ]
