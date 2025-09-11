@@ -4,8 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from phoenix.evals.llm import LLM
-from phoenix.evals.preview.evaluators import (
+from phoenix.evals.evaluators import (
     ClassificationEvaluator,
     Evaluator,
     LLMEvaluator,
@@ -15,6 +14,7 @@ from phoenix.evals.preview.evaluators import (
     list_evaluators,
     to_thread,
 )
+from phoenix.evals.llm import LLM
 from phoenix.evals.templating import Template
 
 
@@ -121,7 +121,7 @@ class TestScore:
         for key in excluded_keys:
             assert key not in result
 
-    @patch("phoenix.evals.preview.evaluators.json.dumps")
+    @patch("phoenix.evals.evaluators.json.dumps")
     def test_score_pretty_print_calls_json_dumps(self, mock_dumps):
         """Test that pretty_print() calls json.dumps correctly."""
         score = Score(name="test", score=0.8)
@@ -503,7 +503,7 @@ class TestRegistryAndDecorator:
     def test_list_evaluators_empty(self):
         """Test list_evaluators with empty registry."""
         # Clear registry for this test
-        from phoenix.evals.preview.evaluators import _registry
+        from phoenix.evals.evaluators import _registry
 
         original_registry = _registry.copy()
         _registry.clear()
@@ -844,7 +844,7 @@ class TestEvaluatorRequiredFieldsAndBinding:
         mapping = {"text": lambda row: row["raw"]["value"].strip()}
         payload = {"raw": {"value": " hello "}}
 
-        from phoenix.evals.preview.evaluators import bind_evaluator
+        from phoenix.evals.evaluators import bind_evaluator
 
         be = bind_evaluator(emph, mapping)
         # Evaluate through bound mapping

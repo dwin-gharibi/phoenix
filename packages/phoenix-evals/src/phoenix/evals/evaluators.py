@@ -13,9 +13,8 @@ from typing_extensions import Mapping
 from phoenix.evals.executors import AsyncExecutor, ExecutionDetails, SyncExecutor
 from phoenix.evals.llm import LLM
 from phoenix.evals.llm.types import ObjectGenerationMethod
+from phoenix.evals.preview.utils import remap_eval_input
 from phoenix.evals.templating import Template
-
-from .utils import remap_eval_input
 
 # --- Type Aliases ---
 EvalInput = Dict[str, Any]

@@ -58,7 +58,7 @@ from typing import (
 
 from pydantic import BaseModel, Field
 
-from ..evaluators import Evaluator, Score
+from phoenix.evals.evaluators import Evaluator, Score
 
 AverageType = Literal["macro", "micro", "weighted"]
 

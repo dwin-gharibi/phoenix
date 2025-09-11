@@ -32,6 +32,19 @@ from .default_templates import (
     USER_FRUSTRATION_PROMPT_RAILS_MAP,
     USER_FRUSTRATION_PROMPT_TEMPLATE,
 )
+from .evaluators import (
+    ClassificationEvaluator,
+    EvalInput,
+    Evaluator,
+    LLMEvaluator,
+    Score,
+    SourceType,
+    ToolSchema,
+    bind_evaluator,
+    create_classifier,
+    create_evaluator,
+    list_evaluators,
+)
 from .generate import llm_generate
 from .legacy.evaluators import (
     HallucinationEvaluator,
@@ -224,4 +237,15 @@ __all__ = [
     "tracing",
     "rate_limiters",
     "llm",
+    "ClassificationEvaluator",
+    "EvalInput",
+    "Evaluator",
+    "LLMEvaluator",
+    "Score",
+    "ToolSchema",
+    "SourceType",
+    "create_classifier",
+    "list_evaluators",
+    "create_evaluator",
+    "bind_evaluator",
 ]
