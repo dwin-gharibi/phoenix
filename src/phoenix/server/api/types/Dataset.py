@@ -28,6 +28,8 @@ from phoenix.server.api.types.pagination import (
 )
 from phoenix.server.api.types.SortDir import SortDir
 
+from .Evaluator import Evaluator
+
 
 @strawberry.type
 class Dataset(Node):
@@ -302,6 +304,23 @@ class Dataset(Node):
                 )
                 async for scores_tuple in await session.stream(query)
             ]
+
+    @strawberry.field
+    def evaluators(
+        self,
+        info: Info[Context, None],
+        first: Optional[int] = 50,
+        last: Optional[int] = UNSET,
+        after: Optional[CursorString] = UNSET,
+        before: Optional[CursorString] = UNSET,
+    ) -> Connection["Evaluator"]:
+        args = ConnectionArgs(
+            first=first,
+            after=after if isinstance(after, CursorString) else None,
+            last=last,
+            before=before if isinstance(before, CursorString) else None,
+        )
+        return connection_from_list([], args=args)
 
     @strawberry.field
     def last_updated_at(self, info: Info[Context, None]) -> Optional[datetime]:
