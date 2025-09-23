@@ -57,11 +57,13 @@ from phoenix.server.api.types.GenerativeProvider import GenerativeProviderKey
 if TYPE_CHECKING:
     import httpx
     from anthropic.types import MessageParam, TextBlockParam, ToolResultBlockParam
-    from google.generativeai.types import ContentType
     from openai import AsyncAzureOpenAI, AsyncOpenAI
     from openai.types import CompletionUsage
     from openai.types.chat import ChatCompletionMessageParam, ChatCompletionMessageToolCallParam
     from opentelemetry.util.types import AttributeValue
+
+    # Type alias for Google content - will be compatible with new google-genai package
+    ContentType = dict[str, Any]
 
 SetSpanAttributesFn: TypeAlias = Callable[[Mapping[str, Any]], None]
 ChatCompletionChunk: TypeAlias = Union[TextChunk, ToolCallChunk]
@@ -1685,7 +1687,7 @@ class GoogleStreamingClient(PlaygroundStreamingClient):
         model: GenerativeModelInput,
         credentials: Optional[list[PlaygroundClientCredential]] = None,
     ) -> None:
-        import google.generativeai as google_genai
+        import google.genai as google_genai
 
         super().__init__(model=model, credentials=credentials)
         self._attributes[LLM_PROVIDER] = OpenInferenceLLMProviderValues.GOOGLE.value
@@ -1702,12 +1704,12 @@ class GoogleStreamingClient(PlaygroundStreamingClient):
         if not api_key:
             raise BadRequest("An API key is required for Gemini models")
 
-        google_genai.configure(api_key=api_key)
+        self.client = google_genai.Client(api_key=api_key)
         self.model_name = model.name
 
     @classmethod
     def dependencies(cls) -> list[Dependency]:
-        return [Dependency(name="google-generativeai", module_name="google.generativeai")]
+        return [Dependency(name="google-genai", module_name="google.genai")]
 
     @classmethod
     def supported_invocation_parameters(cls) -> list[InvocationParameter]:
@@ -1762,28 +1764,32 @@ class GoogleStreamingClient(PlaygroundStreamingClient):
         tools: list[JSONScalarType],
         **invocation_parameters: Any,
     ) -> AsyncIterator[ChatCompletionChunk]:
-        import google.generativeai as google_genai
+        import google.genai as google_genai
 
         google_message_history, current_message, system_prompt = self._build_google_messages(
             messages
         )
 
-        model_args = {"model_name": self.model_name}
-        if system_prompt:
-            model_args["system_instruction"] = system_prompt
-        client = google_genai.GenerativeModel(**model_args)
+        # Get the model from the client
+        model = self.client.models.get(name=f"models/{self.model_name}")
 
-        google_config = google_genai.GenerationConfig(
+        # Build generation config
+        generation_config = google_genai.GenerationConfig(
             **invocation_parameters,
         )
-        google_params = {
-            "content": current_message,
-            "generation_config": google_config,
-            "stream": True,
-        }
 
-        chat = client.start_chat(history=google_message_history)
-        stream = await chat.send_message_async(**google_params)
+        # Prepare contents for the new API
+        contents = google_message_history.copy()
+        if current_message:
+            contents.append({"role": "user", "parts": [{"text": current_message}]})
+
+        # Use the new generate_content method with streaming
+        stream = await model.generate_content_async(
+            contents=contents,
+            generation_config=generation_config,
+            stream=True,
+            system_instruction=system_prompt if system_prompt else None,
+        )
         async for event in stream:
             self._attributes.update(
                 {
@@ -1802,9 +1808,9 @@ class GoogleStreamingClient(PlaygroundStreamingClient):
         system_prompts = []
         for role, content, _tool_call_id, _tool_calls in messages:
             if role == ChatCompletionMessageRole.USER:
-                google_message_history.append({"role": "user", "parts": content})
+                google_message_history.append({"role": "user", "parts": [{"text": content}]})
             elif role == ChatCompletionMessageRole.AI:
-                google_message_history.append({"role": "model", "parts": content})
+                google_message_history.append({"role": "model", "parts": [{"text": content}]})
             elif role == ChatCompletionMessageRole.SYSTEM:
                 system_prompts.append(content)
             elif role == ChatCompletionMessageRole.TOOL:
@@ -1812,7 +1818,8 @@ class GoogleStreamingClient(PlaygroundStreamingClient):
             else:
                 assert_never(role)
         if google_message_history:
-            prompt = google_message_history.pop()["parts"]
+            last_message = google_message_history.pop()
+            prompt = last_message["parts"][0]["text"] if last_message["parts"] else ""
         else:
             prompt = ""
 
