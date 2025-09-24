@@ -116,6 +116,7 @@ export function ExperimentCompareListPage() {
                 edges {
                   experiment: node {
                     id
+                    repetitions
                     datasetVersionId
                     averageRunLatencyMs
                     runCount
@@ -159,6 +160,7 @@ export function ExperimentCompareListPage() {
               edges {
                 run: node {
                   id
+                  repetitionNumber
                   output
                   startTime
                   endTime
@@ -263,6 +265,7 @@ export function ExperimentCompareListPage() {
         const tableData = {
           id: example.id,
           example: example.id,
+          repetitionNumber: baseExperimentRun.repetitionNumber,
           input: example.revision.input,
           referenceOutput: example.revision.referenceOutput,
           outputs: {
@@ -364,6 +367,19 @@ export function ExperimentCompareListPage() {
                 </Tooltip>
               </TooltipTrigger>
             </Flex>
+          );
+        },
+      },
+      {
+        header: "repetition",
+        size: 64,
+        accessorKey: "repetitionNumber",
+        cell: ({ getValue }) => {
+          const value = getValue() as number;
+          return (
+            <Text size="S" fontFamily="mono">
+              {value}
+            </Text>
           );
         },
       },
@@ -839,6 +855,11 @@ export function ExperimentCompareListPage() {
     columns,
     getCoreRowModel: getCoreRowModel(),
     columnResizeMode: "onChange",
+    state: {
+      columnVisibility: {
+        repetitionNumber: baseExperiment.repetitions > 1 ? true : false,
+      },
+    },
   });
 
   const rows = table.getRowModel().rows;
@@ -955,6 +976,11 @@ export function ExperimentCompareListPage() {
         <Modal variant="slideover" size="fullscreen">
           {selectedExampleIndex !== null && datasetId && (
             <ExperimentCompareDetailsDialog
+              repetitionNumber={
+                baseExperiment.repetitions > 1
+                  ? rows[selectedExampleIndex].original.repetitionNumber
+                  : undefined
+              }
               datasetId={datasetId}
               datasetVersionId={baseExperiment?.datasetVersionId}
               selectedExampleIndex={selectedExampleIndex}
