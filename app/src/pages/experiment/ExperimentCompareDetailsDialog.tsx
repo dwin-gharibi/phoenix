@@ -58,36 +58,33 @@ type ExperimentRun = NonNullable<
 
 export function ExperimentCompareDetailsDialog({
   selectedExampleId,
+  selectedExampleIndex,
   datasetId,
   datasetVersionId,
   baseExperimentId,
   compareExperimentIds,
   exampleIds,
-  onNextExample,
-  onPreviousExample,
+  onExampleChange,
 }: {
   selectedExampleId: string;
+  selectedExampleIndex: number;
   datasetId: string;
   datasetVersionId: string;
   baseExperimentId: string;
   compareExperimentIds: string[];
-  exampleIds?: string[];
-  onNextExample?: (nextId: string) => void;
-  onPreviousExample?: (previousId: string) => void;
+  exampleIds: string[];
+  onExampleChange: (exampleIndex: number) => void;
 }) {
   return (
     <Dialog aria-label="Example Details">
       <DialogContent>
         <DialogHeader>
           <Flex gap="size-150">
-            {onNextExample && onPreviousExample && exampleIds && (
-              <ExampleDetailsPaginator
-                currentId={selectedExampleId}
-                exampleIds={exampleIds}
-                onNext={onNextExample}
-                onPrevious={onPreviousExample}
-              />
-            )}
+            <ExampleDetailsPaginator
+              currentExampleIndex={selectedExampleIndex}
+              exampleIds={exampleIds}
+              onExampleChange={onExampleChange}
+            />
             <DialogTitle>{selectedExampleId}</DialogTitle>
           </Flex>
           <DialogTitleExtra>
