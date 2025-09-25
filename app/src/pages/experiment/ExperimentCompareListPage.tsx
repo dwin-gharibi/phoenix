@@ -994,6 +994,13 @@ export function ExperimentCompareListPage() {
               compareExperimentIds={compareExperimentIds}
               exampleIds={exampleIds}
               onExampleChange={(exampleIndex) => {
+                if (
+                  exampleIndex === exampleIds.length - 1 &&
+                  !isLoadingNext &&
+                  hasNext
+                ) {
+                  loadNext(PAGE_SIZE);
+                }
                 setSelectedExampleIndex(exampleIndex);
               }}
             />
