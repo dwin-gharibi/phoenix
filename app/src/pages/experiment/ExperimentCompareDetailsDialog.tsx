@@ -96,12 +96,6 @@ export function ExperimentCompareDetailsDialog({
               `}
             >
               {selectedExampleId}
-              {repetitionNumber && (
-                <>
-                  <Icon svg={<Icons.ChevronRight />} />
-                  repetition {repetitionNumber}
-                </>
-              )}
             </DialogTitle>
           </Flex>
           <DialogTitleExtra>
