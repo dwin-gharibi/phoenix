@@ -139,6 +139,9 @@ export function DatasetsTable(props: DatasetsTableProps) {
     const cols: ColumnDef<(typeof tableData)[number]>[] = [
       {
         header: "نام دیتاست",
+        meta: {
+          textAlign: "center" as const,
+        },
         accessorKey: "name",
         cell: ({ row }: CellContext<(typeof tableData)[number], unknown>) => {
           const hasExperiments = row.original.experimentCount > 0;
@@ -151,6 +154,9 @@ export function DatasetsTable(props: DatasetsTableProps) {
       {
         header: "لیبل‌های دیتاست",
         accessorKey: "labels",
+        meta: {
+          textAlign: "center" as const,
+        },
         enableSorting: false,
         cell: ({ row }: CellContext<(typeof tableData)[number], unknown>) => {
           return (
@@ -180,11 +186,17 @@ export function DatasetsTable(props: DatasetsTableProps) {
         header: "توضیحات دیتاست",
         accessorKey: "description",
         enableSorting: false,
+        meta: {
+          textAlign: "center" as const,
+        },
       },
       {
         header: "ساخته شده در",
         accessorKey: "createdAt",
         cell: TimestampCell,
+        meta: {
+          textAlign: "center" as const,
+        },
       },
       {
         header: "تعداد مثال‌ها",
@@ -207,11 +219,17 @@ export function DatasetsTable(props: DatasetsTableProps) {
         accessorKey: "metadata",
         enableSorting: false,
         cell: CompactJSONCell,
+        meta: {
+          textAlign: "center" as const,
+        },
       },
       {
         header: "",
         id: "actions",
         enableSorting: false,
+        meta: {
+          textAlign: "center" as const,
+        },
         size: 10,
         cell: ({ row }: CellContext<(typeof tableData)[number], unknown>) => {
           return (
