@@ -138,7 +138,7 @@ export function DatasetsTable(props: DatasetsTableProps) {
   const columns = useMemo(() => {
     const cols: ColumnDef<(typeof tableData)[number]>[] = [
       {
-        header: "name",
+        header: "نام دیتاست",
         accessorKey: "name",
         cell: ({ row }: CellContext<(typeof tableData)[number], unknown>) => {
           const hasExperiments = row.original.experimentCount > 0;
@@ -149,7 +149,7 @@ export function DatasetsTable(props: DatasetsTableProps) {
         },
       },
       {
-        header: "labels",
+        header: "لیبل‌های دیتاست",
         accessorKey: "labels",
         enableSorting: false,
         cell: ({ row }: CellContext<(typeof tableData)[number], unknown>) => {
@@ -177,12 +177,12 @@ export function DatasetsTable(props: DatasetsTableProps) {
         },
       },
       {
-        header: "description",
+        header: "توضیحات دیتاست",
         accessorKey: "description",
         enableSorting: false,
       },
       {
-        header: "created at",
+        header: "ساخته شده در",
         accessorKey: "createdAt",
         cell: TimestampCell,
       },

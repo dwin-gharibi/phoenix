@@ -99,7 +99,7 @@ export function LoginForm(props: LoginFormProps) {
                 value={value}
                 autoComplete="email"
               >
-                <Label>Email</Label>
+                <Label>ایمیل</Label>
                 <Input placeholder="your email address" />
               </TextField>
             )}
@@ -133,12 +133,12 @@ export function LoginForm(props: LoginFormProps) {
                   }}
                   autoComplete="password"
                 >
-                  <Label>Password</Label>
+                  <Label>رمز عبور</Label>
                   <Input placeholder="your password" />
                 </TextField>
               )}
             />
-            <Link to="/forgot-password">Forgot your password?</Link>
+            <Link to="/forgot-password">رمز عبور را فراموش کردید؟</Link>
           </div>
           <Button
             variant="primary"
@@ -148,7 +148,7 @@ export function LoginForm(props: LoginFormProps) {
             }
             onPress={() => handleSubmit(onSubmit)()}
           >
-            {isLoading ? "Logging In" : "Log In"}
+            {isLoading ? "در حال ورود" : "ورود"}
           </Button>
         </Flex>
       </Form>

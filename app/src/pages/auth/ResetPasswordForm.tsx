@@ -96,7 +96,7 @@ export function ResetPasswordForm(props: {
           isReadOnly
           value={data.viewer?.email}
         >
-          <Label>Email</Label>
+          <Label>ایمیل</Label>
           <Input />
         </TextField>
       </VisuallyHidden>
@@ -121,12 +121,12 @@ export function ResetPasswordForm(props: {
             id="current-password"
             autoComplete="current-password"
           >
-            <Label>Old Password</Label>
+            <Label>رمز عبور قدیمی</Label>
             <Input />
             {error ? (
               <FieldError>{error?.message}</FieldError>
             ) : (
-              <Text slot="description">The current password</Text>
+              <Text slot="description">رمز عبور جدید</Text>
             )}
           </TextField>
         )}
@@ -135,10 +135,10 @@ export function ResetPasswordForm(props: {
         name="newPassword"
         control={control}
         rules={{
-          required: "Password is required",
+          required: "فیلد رمز عبور اجباری است",
           minLength: {
             value: MIN_PASSWORD_LENGTH,
-            message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters`,
+            message: `رمز عبور باید حداقل ${MIN_PASSWORD_LENGTH} کاراکتر باشد`,
           },
           validate: (value, formValues) =>
             value !== formValues.currentPassword ||
@@ -159,13 +159,13 @@ export function ResetPasswordForm(props: {
             id="new-password"
             autoComplete="new-password"
           >
-            <Label>New Password</Label>
+            <Label>رمز عبور جدید</Label>
             <Input />
             {error ? (
               <FieldError>{error?.message}</FieldError>
             ) : (
               <Text slot="description">
-                Password must be at least {MIN_PASSWORD_LENGTH} characters
+                رمز عبور باید حداقل {MIN_PASSWORD_LENGTH} کاراکتر داشته باشد
               </Text>
             )}
           </TextField>
@@ -178,7 +178,7 @@ export function ResetPasswordForm(props: {
           required: "Password is required",
           minLength: {
             value: MIN_PASSWORD_LENGTH,
-            message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters`,
+            message: `رمز عبور باید حداقل ${MIN_PASSWORD_LENGTH} کاراکتر داشته باشد`,
           },
           validate: (value, formValues) =>
             value === formValues.newPassword || "Passwords do not match",
@@ -197,12 +197,12 @@ export function ResetPasswordForm(props: {
             defaultValue={value}
             autoComplete="new-password"
           >
-            <Label>Confirm Password</Label>
+            <Label>تایید رمز عبور جدید</Label>
             <Input />
             {error ? (
               <FieldError>{error?.message}</FieldError>
             ) : (
-              <Text slot="description">Confirm the new password</Text>
+              <Text slot="description">تایید رمز عبور جدید</Text>
             )}
           </TextField>
         )}
@@ -223,7 +223,7 @@ export function ResetPasswordForm(props: {
             navigate(-1);
           }}
         >
-          Cancel
+          لغو
         </Button>
         <Button variant="primary" type="submit" isDisabled={isCommitting}>
           {isCommitting ? "Resetting..." : "Reset Password"}

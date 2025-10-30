@@ -128,7 +128,7 @@ export function AddDatasetExampleDialog(props: AddDatasetExampleDialogProps) {
       {({ close }) => (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Example</DialogTitle>
+            <DialogTitle>افزودن مثال جدید</DialogTitle>
             <DialogTitleExtra>
               <DialogCloseButton slot="close" />
             </DialogTitleExtra>
@@ -153,7 +153,7 @@ export function AddDatasetExampleDialog(props: AddDatasetExampleDialogProps) {
                       fieldState: { invalid, error },
                     }) => (
                       <Card
-                        title="Input"
+                        title="ورودی"
                         subTitle="The input to the LLM, retriever, program, etc."
                         {...defaultCardProps}
                       >
@@ -178,7 +178,7 @@ export function AddDatasetExampleDialog(props: AddDatasetExampleDialogProps) {
                       fieldState: { invalid, error },
                     }) => (
                       <Card
-                        title="Output"
+                        title="خروجی"
                         subTitle="The output of the LLM or program to be used as an expected output"
                         {...defaultCardProps}
                         backgroundColor="green-100"
@@ -205,7 +205,7 @@ export function AddDatasetExampleDialog(props: AddDatasetExampleDialogProps) {
                       fieldState: { invalid, error },
                     }) => (
                       <Card
-                        title="Metadata"
+                        title="متادیتا"
                         subTitle="All data from the span to use during experimentation or evaluation"
                         {...defaultCardProps}
                       >

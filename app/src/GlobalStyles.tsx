@@ -1111,12 +1111,17 @@ const opacitiesCSS = css`
 `;
 
 const appGlobalStylesCSS = css`
+  * {
+    font-family: Vazirmatn, sans-serif;
+    direction: rtl;
+  }
   body,
   input,
   button,
   .ac-theme // We scope it to the theme so we can mount two at the same time
   {
-    font-family: "Geist", sans-serif;
+    direction: rtl;
+    font-family: Vazirmatn, sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
@@ -1283,7 +1288,7 @@ const chartCSS = css`
 
 const fontFamilyCSS = css`
   .font-default {
-    font-family: "Geist", sans-serif;
+    font-family: Vazirmatn, sans-serif;
     font-optical-sizing: auto;
   }
   .font-mono,

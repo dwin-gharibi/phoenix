@@ -263,12 +263,12 @@ function DatasetPageContent({
                     }
                   }}
                 >
-                  <MenuItem id="csv">Download CSV</MenuItem>
+                  <MenuItem id="csv">دانلود فایل CSV</MenuItem>
                   <MenuItem id="openai-ft">
-                    Download OpenAI Fine-Tuning JSONL
+                    دانلود فایل OpenAI Fine-Tuning JSONL
                   </MenuItem>
                   <MenuItem id="openai-evals">
-                    Download OpenAI Evals JSONL
+                    دانلود فایل OpenAI Evals JSONL
                   </MenuItem>
                 </Menu>
               </Popover>
