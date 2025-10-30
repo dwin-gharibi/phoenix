@@ -82,10 +82,10 @@ export function ForgotPasswordForm({
               onBlur={onBlur}
               value={value}
             >
-              <Label>Email</Label>
-              <Input placeholder="your email address" />
+              <Label>ایمیل</Label>
+              <Input placeholder="ایمیل خود را وارد کنید" />
               <Text slot="description">
-                Enter the email address associated with your account.
+                ایمیل مرتبط با حساب کاربری خود را وارد کنید
               </Text>
             </TextField>
           )}
@@ -100,7 +100,7 @@ export function ForgotPasswordForm({
           `}
         >
           <Button variant="primary" type={"submit"} isDisabled={isLoading}>
-            {isLoading ? "Sending..." : "Send"}
+            {isLoading ? "در حال بازیابی رمز عبور..." : "بازیابی رمز عبور"}
           </Button>
         </div>
       </Form>

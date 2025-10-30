@@ -24,7 +24,7 @@ export function NewDatasetLabelButton(props: NewDatasetLabelButtonProps) {
         leadingVisual={<Icon svg={<Icons.PlusOutline />} />}
         onPress={() => setShowNewDatasetLabelDialog(true)}
       >
-        New Label
+        لیبل حدید
       </Button>
       <ModalOverlay
         isOpen={showNewDatasetLabelDialog}

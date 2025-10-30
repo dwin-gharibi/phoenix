@@ -100,7 +100,7 @@ export function NewDatasetLabelDialog(props: NewDatasetLabelDialogProps) {
     <Dialog>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Dataset Label</DialogTitle>
+          <DialogTitle>لیبل حدید برای دیتاست</DialogTitle>
           <DialogCloseButton />
         </DialogHeader>
         {error ? (

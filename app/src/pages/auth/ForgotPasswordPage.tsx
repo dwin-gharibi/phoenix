@@ -15,9 +15,9 @@ export function ForgotPasswordPage() {
       justifyContent="center"
       gap="size-100"
     >
-      <Heading level={1}>Check your email</Heading>
+      <Heading level={1}>بررسی ایمیل وارد شده</Heading>
       <p>
-        {`Thanks! If an account with that email address exists, we sent you a link to reset your password.`}
+        {`از شما ممنونیم! اگر این ایمیل متعلق به حساب کاربری معتبری در سامانه باشد، به زودی لینک بازیابی رمز عبور برای شما ارسال خواهد شد`}
       </p>
     </Flex>
   ) : (
@@ -28,10 +28,9 @@ export function ForgotPasswordPage() {
         justifyContent="center"
         gap="size-100"
       >
-        <Heading level={1}>Forgot Password</Heading>
+        <Heading level={1}>فراموشی رمز عبور</Heading>
         <p>
-          {`Enter the email address associated with your account and we'll send you
-        a link to reset your password.`}
+          {`ایمیل مرتبط با حساب کاربری خود را وارد کنید. برای بازیابی حساب‌ کاربری برای شما لینک بازنشانی رمز عبور ارسال خواهد شد`}
         </p>
       </Flex>
       <ForgotPasswordForm onResetSent={() => setResetSent(true)} />
@@ -57,7 +56,7 @@ export function ForgotPasswordPage() {
           justifyContent="center"
           gap="size-200"
         >
-          <Link to="/login">Back to Login</Link>
+          <Link to="/login">برگشت به صفحه ورود</Link>
         </Flex>
       </div>
     </AuthLayout>

@@ -187,23 +187,23 @@ export function DatasetsTable(props: DatasetsTableProps) {
         cell: TimestampCell,
       },
       {
-        header: "example count",
+        header: "تعداد مثال‌ها",
         accessorKey: "exampleCount",
         enableSorting: false,
         meta: {
-          textAlign: "right" as const,
+          textAlign: "center" as const,
         },
       },
       {
-        header: "experiment count",
+        header: "تعداد ارزیابی‌ها",
         accessorKey: "experimentCount",
         enableSorting: false,
         meta: {
-          textAlign: "right" as const,
+          textAlign: "center" as const,
         },
       },
       {
-        header: "metadata",
+        header: "متادیتا‌ها",
         accessorKey: "metadata",
         enableSorting: false,
         cell: CompactJSONCell,
@@ -327,6 +327,8 @@ export function DatasetsTable(props: DatasetsTableProps) {
       css={css`
         flex: 1 1 auto;
         overflow: auto;
+        direction: rtl;
+        text-align: center;
       `}
       onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
       ref={tableContainerRef}

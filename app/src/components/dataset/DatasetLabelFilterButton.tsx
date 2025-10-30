@@ -30,8 +30,8 @@ export function DatasetLabelFilterButton(props: DatasetLabelFilterButtonProps) {
 
   const buttonText =
     selectedLabelIds.length > 0
-      ? `Labels (${selectedLabelIds.length})`
-      : "Labels";
+      ? `لیبل‌ها (${selectedLabelIds.length})`
+      : "لیبل‌ها";
 
   return (
     <DialogTrigger>

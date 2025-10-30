@@ -100,7 +100,7 @@ export function LoginForm(props: LoginFormProps) {
                 autoComplete="email"
               >
                 <Label>ایمیل</Label>
-                <Input placeholder="your email address" />
+                <Input placeholder="ایمیل خود را وارد کنید" />
               </TextField>
             )}
           />
@@ -109,8 +109,8 @@ export function LoginForm(props: LoginFormProps) {
               position: relative;
               a {
                 position: absolute;
-                float: right;
-                right: 0;
+                float: left;
+                left: 0;
                 top: var(--ac-global-dimension-size-50);
                 font-size: 12px;
               }
@@ -134,7 +134,7 @@ export function LoginForm(props: LoginFormProps) {
                   autoComplete="password"
                 >
                   <Label>رمز عبور</Label>
-                  <Input placeholder="your password" />
+                  <Input placeholder="رمز عبور خود را وارد کنید" />
                 </TextField>
               )}
             />

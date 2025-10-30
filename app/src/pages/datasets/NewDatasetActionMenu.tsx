@@ -52,7 +52,7 @@ export function NewDatasetActionMenu({
     <StopPropagation>
       <MenuTrigger>
         <Button leadingVisual={<Icon svg={<Icons.DatabaseOutline />} />}>
-          Create Dataset
+          ساخت‌ دیتاست‌ جدید
         </Button>
         <Popover>
           <Menu
